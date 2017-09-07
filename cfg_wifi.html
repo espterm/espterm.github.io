@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>WiFi Settings :: ESPTerm</title>
+	<link href="/css/app.css" rel="stylesheet">
+	<script src="/js/app.js"></script>
+	<script>
+		var _root = location.host;
+		var _demo = 1;
+				var _demo_aps = "{\n \"result\": {\n  \"inProgress\": 0,\n  \"APs\": [\n   {\"essid\": \"Cisco\", \"bssid\": \"88:f7:c7:52:b3:99\", \"rssi\": 205, \"rssi_perc\": 100, \"enc\": 4, \"channel\": 7},\n   {\"essid\": \"UPC Wi-Free\", \"bssid\": \"8a:f7:c7:52:b3:9b\", \"rssi\": 203, \"rssi_perc\": 100, \"enc\": 5, \"channel\": 1},\n   {\"essid\": \"UPC Wi-Free\", \"bssid\": \"0a:95:2a:0c:84:31\", \"rssi\": 166, \"rssi_perc\": 32, \"enc\": 5, \"channel\": 1},\n   {\"essid\": \"MujO2Internet_2EEB96\", \"bssid\": \"d0:60:8c:2e:eb:96\", \"rssi\": 174, \"rssi_perc\": 48, \"enc\": 4, \"channel\": 4},\n   {\"essid\": \"Internet\", \"bssid\": \"38:72:c0:32:bd:0d\", \"rssi\": 164, \"rssi_perc\": 28, \"enc\": 2, \"channel\": 10},\n   {\"essid\": \"MyO2Internet_08C850\", \"bssid\": \"78:c1:a7:08:c8:50\", \"rssi\": 186, \"rssi_perc\": 72, \"enc\": 4, \"channel\": 11},\n   {\"essid\": \"UPC Wi-Free\", \"bssid\": \"06:7c:34:9a:6f:7c\", \"rssi\": 167, \"rssi_perc\": 34, \"enc\": 0, \"channel\": 11},\n   {\"essid\": \"Internet_B0\", \"bssid\": \"5c:f4:ab:11:3b:b3\", \"rssi\": 175, \"rssi_perc\": 50, \"enc\": 3, \"channel\": 13},\n   {\"essid\": \"UPC5716805\", \"bssid\": \"08:95:2a:0c:84:3f\", \"rssi\": 165, \"rssi_perc\": 30, \"enc\": 4, \"channel\": 1}\n    ]\n }\n}";	</script>
+</head>
+<body class="cfg">
+<div id="outer">
+<nav id="menu">
+	<div id="brand" tabindex=0>ESPTerm</div>
+	<a href="term.html" class="icn-back">Back to Terminal</a>
+	<a href="cfg_term.html" class="icn-terminal ">Terminal Settings</a><a href="cfg_wifi.html" class="icn-wifi selected">WiFi Settings</a><a href="cfg_network.html" class="icn-network ">Network Settings</a><a href="cfg_system.html" class="icn-configure ">System Settings</a><a href="help.html" class="icn-help ">Quick Reference</a><a href="about.html" class="icn-about ">About ESPTerm</a></nav>
+
+<script>
+	function menuOpen() { $('#menu').toggleClass('expanded') }
+	$('#brand').on('click', menuOpen).on('keypress', cr(menuOpen));
+</script>
+
+<div id="content">
+<img src="/img/loader.gif" alt="Loading…" id="loader">
+<h1>WiFi Settings</h1>
+
+<div class="Box errors hidden">
+	<span class="lead">Validation errors for:</span>&nbsp;<span class="list"></span>
+</div>
+
+<form class="Box str mobcol" action="wifi_set.html" method="GET" id="form-1">
+	<h2 tabindex=0>Built-in Access Point</h2>
+
+	<div class="Row checkbox x-ap-toggle">
+		<label>Enabled</label><!--
+		--><span class="box" tabindex=0></span>
+		<input type="hidden" id="ap_enabled" name="ap_enable" value="1">
+	</div>
+
+	<div class="Row x-ap-on">
+		<label for="ap_ssid">AP SSID</label>
+		<input type="text" name="ap_ssid" id="ap_ssid" value="TERM-027451" required>
+	</div>
+
+	<div class="Row x-ap-on">
+		<label for="ap_password">Password</label>
+		<input type="text" name="ap_password" id="ap_password" value="">
+	</div>
+
+	<div class="Row x-ap-on">
+		<label for="ap_channel">Channel</label>
+		<input type="number" name="ap_channel" id="ap_channel" min=1 max=14 value="7" required>
+	</div>
+
+	<div class="Row range x-ap-on">
+		<label for="tpw">
+			Transmit power			<span class="display x-disp1 mq-phone"></span>
+		</label>
+		<input type="range" name="tpw" id="tpw" step=1 min=0 max=82 value="60">
+		<span class="display x-disp2 mq-no-phone"></span>
+	</div>
+
+	<div class="Row checkbox x-ap-on">
+		<label>Hide SSID</label><!--
+		--><span class="box" tabindex=0></span>
+		<input type="hidden" name="ap_hidden" value="0">
+	</div>
+
+	<div class="Row buttons">
+		<a class="button icn-ok" href="#" onclick="qs('#form-1').submit()">Apply!</a>
+	</div>
+</form>
+
+<form class="Box str mobcol expanded" action="wifi_set.html" method="GET" id="form-2">
+	<h2 tabindex=0>Join Existing Network</h2>
+
+	<div class="Row checkbox x-sta-toggle">
+		<label>Enabled</label><!--
+		--><span class="box" tabindex=0></span>
+		<input type="hidden" id="sta_enabled" name="sta_enable" value="1">
+	</div>
+
+	<div class="Row explain nomargintop x-sta-on">
+		<span class="spacer"></span>
+		After selecting a network, press Apply to connect.	</div>
+
+	<input type="hidden" name="sta_ssid" id="sta_ssid" value="">
+	<input type="hidden" name="sta_password" id="sta_password" value="">
+
+	<div class="Row sta-info x-sta-on">
+		<label>Selected</label>
+		<div class="AP-preview hidden" id="sta-nw">
+			<div class="wrap">
+				<div class="inner">
+					<div class="essid"></div>
+					<div class="passwd">🔒 Password saved</div>
+					<div class="nopasswd">🔓 Open access</div>
+					<div class="ip"></div>
+				</div>
+				<a class="forget" href="#" id="forget-sta">×</a>
+			</div>
+		</div>
+		<div class="AP-preview-nil" id="sta-nw-nil">
+			None		</div>
+	</div>
+
+	<div id="ap-box" class="x-sta-on">
+		<label>Available networks:</label>
+		<div id="ap-scan"><a href="#" onclick="WiFi.startScanning(); return false">Click here to start scanning!</a></div>
+		<div id="ap-loader" class="hidden">Scanning<span class="anim-dots">.</span></div>
+		<div id="ap-list" class="hidden"></div>
+	</div>
+
+	<div class="Row buttons">
+		<a class="button icn-ok" href="#" onclick="qs('#form-2').submit()">Apply!</a>
+	</div>
+</form>
+
+<script>
+	WiFi.scan_url = '/cfg/wifi/scan';
+	WiFi.init({
+		sta_ssid: 'Cisco',
+		sta_password: 'Passw0rd!',
+		sta_active_ip: '192.168.82.66',
+		sta_active_ssid: 'Cisco',
+	});
+
+	function updateApDisp() {
+		var a = !!parseInt($('#ap_enabled').val());
+		$('.x-ap-on').toggleClass('hidden', !a);
+	}
+	$('.x-ap-toggle').on('click', function() {
+		setTimeout(function() {
+			updateApDisp();
+		}, 0)
+	});
+
+	function updateStaDisp() {
+		var a = !!parseInt($('#sta_enabled').val());
+		$('.x-sta-on').toggleClass('hidden', !a);
+	}
+	$('.x-sta-toggle').on('click', function() {
+		setTimeout(function() {
+			updateStaDisp();
+		}, 0)
+	});
+
+	updateApDisp();
+	updateStaDisp();
+</script>
+
+<div class="botpad"></div>
+
+<div class="NotifyMsg hidden" id="notif"></div>
+
+</div>
+
+</div>
+
+</body>
+</html>

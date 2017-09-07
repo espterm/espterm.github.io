@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Network Settings :: ESPTerm</title>
+	<link href="/css/app.css" rel="stylesheet">
+	<script src="/js/app.js"></script>
+	<script>
+		var _root = location.host;
+		var _demo = 1;
+					</script>
+</head>
+<body class="cfg">
+<div id="outer">
+<nav id="menu">
+	<div id="brand" tabindex=0>ESPTerm</div>
+	<a href="term.html" class="icn-back">Back to Terminal</a>
+	<a href="cfg_term.html" class="icn-terminal ">Terminal Settings</a><a href="cfg_wifi.html" class="icn-wifi ">WiFi Settings</a><a href="cfg_network.html" class="icn-network selected">Network Settings</a><a href="cfg_system.html" class="icn-configure ">System Settings</a><a href="help.html" class="icn-help ">Quick Reference</a><a href="about.html" class="icn-about ">About ESPTerm</a></nav>
+
+<script>
+	function menuOpen() { $('#menu').toggleClass('expanded') }
+	$('#brand').on('click', menuOpen).on('keypress', cr(menuOpen));
+</script>
+
+<div id="content">
+<img src="/img/loader.gif" alt="Loading…" id="loader">
+<h1>Network Settings</h1>
+
+<div class="Box errors hidden">
+	<span class="lead">Validation errors for:</span>&nbsp;<span class="list"></span>
+</div>
+
+
+<form class="Box str mobcol" action="network_set.html" method="GET" id="form-2">
+	<h2 tabindex=0>DHCP Client (Station)</h2>
+
+	<div class="Row explain">
+		
+		Switch off Dynamic IP to configure the static IP address.	</div>
+
+	<div class="Row checkbox x-static-toggle" >
+		<label>Use dynamic IP</label><!--
+		--><span class="box" tabindex=0 role=checkbox></span>
+		<input type="hidden" id="sta_dhcp_enable" name="sta_dhcp_enable" value="1">
+	</div>
+
+	<div class="Row x-static">
+		<label for="sta_addr_ip">ESPTerm static IP</label>
+		<input type="text" name="sta_addr_ip" id="sta_addr_ip" value="192.168.0.33" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+	</div>
+
+	<div class="Row x-static">
+		<label for="sta_addr_mask">Subnet mask</label>
+		<input type="text" name="sta_addr_mask" id="sta_addr_mask" value="255.255.255.0" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+	</div>
+
+	<div class="Row x-static">
+		<label for="sta_addr_gw">Gateway IP</label>
+		<input type="text" name="sta_addr_gw" id="sta_addr_gw" value="192.168.0.1" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+	</div>
+
+	<div class="Row buttons">
+		<a class="button icn-ok" href="#" onclick="qs('#form-2').submit()">Apply!</a>
+	</div>
+</form>
+
+<form class="Box str mobcol" action="network_set.html" method="GET" id="form-1">
+	<h2 tabindex=0>DHCP Server (AP)</h2>
+
+	<div class="Row explain">
+		
+		Those settings affect the built-in DHCP server in AP mode.	</div>
+
+	<div class="Row">
+		<label for="ap_addr_mask">Subnet mask</label>
+		<input type="text" name="ap_addr_mask" id="ap_addr_mask" value="255.255.255.0" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+	</div>
+
+	<div class="Row">
+		<label for="ap_addr_ip">Own IP address</label>
+		<input type="text" name="ap_addr_ip" id="ap_addr_ip" value="192.168.4.1" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+	</div>
+
+	<div class="Row">
+		<label for="ap_dhcp_start">Pool start IP</label>
+		<input type="text" name="ap_dhcp_start" id="ap_dhcp_start" value="192.168.4.100" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+	</div>
+
+	<div class="Row">
+		<label for="ap_dhcp_end">Pool end IP</label>
+		<input type="text" name="ap_dhcp_end" id="ap_dhcp_end" value="192.168.4.200" pattern="^([0-9]{1,3}\.){3}[0-9]{1,3}$" required>
+	</div>
+
+	<div class="Row">
+		<label for="ap_dhcp_time">Lease time<span class="mq-phone">&nbsp;(min)</span></label>
+		<input type="number" step=1 min=1 max=2880 name="ap_dhcp_time" id="ap_dhcp_time" value="120" required>
+		<span class="mq-no-phone">&nbsp;min</span>
+	</div>
+
+	<div class="Row buttons">
+		<a class="button icn-ok" href="#" onclick="qs('#form-1').submit()">Apply!</a>
+	</div>
+</form>
+
+<div class="Box mobcol">
+	<h2>MAC addresses</h2>
+
+	<div class="Row">
+		<label>Station MAC</label><input type="text" readonly value="5c:cf:7f:02:74:51">
+	</div>
+	<div class="Row">
+		<label>AP MAC</label><input type="text" readonly value="5e:cf:7f:02:74:51">
+	</div>
+</div>
+
+<script>
+	function updateStaticDisp() {
+		var sttc = !parseInt($('#sta_dhcp_enable').val());
+		$('.x-static').toggleClass('hidden', !sttc);
+	}
+	$('.x-static-toggle').on('click', function() {
+		setTimeout(function() {
+			updateStaticDisp();
+		}, 0)
+	});
+	updateStaticDisp();
+</script>
+
+<div class="botpad"></div>
+
+<div class="NotifyMsg hidden" id="notif"></div>
+
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Connecting to Network :: ESPTerm</title>
+	<link href="/css/app.css" rel="stylesheet">
+	<script src="/js/app.js"></script>
+	<script>
+		var _root = location.host;
+		var _demo = 1;
+					</script>
+</head>
+<body class="">
+<div id="outer">
+
+<div id="content">
+<img src="/img/loader.gif" alt="Loading…" id="loader">
+<h1>Connecting to Network</h1>
+
+<div class="Box">
+	<p><b>Status:</b> <span id="status"></span><span class="anim-dots">.</span></p>
+	<a href="cfg_wifi.html" id="backbtn" class="button">Back to WiFi config</a>
+</div>
+
+<div class="Box">
+	<p>
+		If you're configuring ESPTerm via a smartphone, or were connected
+		from another external network, your device may lose connection and this 
+		progress indicator won't work. Please wait a while (~ 15 seconds), 
+		then check if the connection succeeded.</p>
+	<p>
+		To force enable the built-in AP, hold the BOOT 
+		button until the blue LED starts flashing. Hold the button longer (until the LED 
+		flashes rapidly) for a "factory reset".</p>
+</div>
+
+<script>
+	var xhr = new XMLHttpRequest();
+	var abortTmeo;
+	var failCounter = 0;
+
+	var messages = {"disabled":"Station mode is disabled.","idle":"Idle, not connected and has no IP.","success":"Connected! Received IP ","working":"Connecting to selected AP","fail":"Connection failed, check settings & try again. Cause: "};
+
+	function onFail() {
+		$("#status").html("Telemetry lost; something went wrong, or your device disconnected.");
+		$('.anim-dots').addClass('hidden');
+	}
+
+	function getStatus() {
+		xhr.open("GET", 'http://'+_root+'/cfg/wifi/connstatus');
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState == 4) {
+				if (xhr.status == 200) {
+					clearTimeout(abortTmeo);
+
+					try {
+						var data = JSON.parse(xhr.responseText);
+						var done = false;
+						var msg = messages[data.status] || '...';
+
+						if (data.status == 'success') {
+							msg += data.ip;
+							done = true;
+						}
+
+						if (data.status == 'fail') {
+							msg += data.cause;
+							done = true;
+						}
+
+						$("#status").html(msg);
+
+						if (done) {
+//					        $('#backbtn').removeClass('hidden');
+							$('.anim-dots').addClass('hidden');
+						} else {
+							// ask again after a short delay
+							window.setTimeout(getStatus, 1000);
+						}
+					} catch(e) {
+						failCounter++;
+						console.log(e);
+						// repeat
+						if (failCounter > 5) {
+							onFail();
+						}
+						else {
+							window.setTimeout(getStatus, 1000);
+						}
+					}
+				} else {
+					onFail();
+				}
+			}
+		};
+
+		// XHR timeout
+		abortTmeo = setTimeout(function () {
+			xhr.abort();
+			onFail();
+		}, 4000);
+
+		xhr.send();
+	}
+
+	getStatus();
+</script>
+
+<div class="botpad"></div>
+
+<div class="NotifyMsg hidden" id="notif"></div>
+
+</div>
+
+</div>
+
+</body>
+</html>

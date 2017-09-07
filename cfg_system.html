@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>System Settings :: ESPTerm</title>
+	<link href="/css/app.css" rel="stylesheet">
+	<script src="/js/app.js"></script>
+	<script>
+		var _root = location.host;
+		var _demo = 1;
+					</script>
+</head>
+<body class="cfg">
+<div id="outer">
+<nav id="menu">
+	<div id="brand" tabindex=0>ESPTerm</div>
+	<a href="term.html" class="icn-back">Back to Terminal</a>
+	<a href="cfg_term.html" class="icn-terminal ">Terminal Settings</a><a href="cfg_wifi.html" class="icn-wifi ">WiFi Settings</a><a href="cfg_network.html" class="icn-network ">Network Settings</a><a href="cfg_system.html" class="icn-configure selected">System Settings</a><a href="help.html" class="icn-help ">Quick Reference</a><a href="about.html" class="icn-about ">About ESPTerm</a></nav>
+
+<script>
+	function menuOpen() { $('#menu').toggleClass('expanded') }
+	$('#brand').on('click', menuOpen).on('keypress', cr(menuOpen));
+</script>
+
+<div id="content">
+<img src="/img/loader.gif" alt="Loading…" id="loader">
+<h1>System Settings</h1>
+
+<div class="Box errors hidden">
+	<span class="lead">Validation errors for:</span>&nbsp;<span class="list"></span>
+</div>
+
+<div class="Box str mobcol">
+	<h2 tabindex=0>Save & Restore</h2>
+
+	<div class="Row explain nomargintop">
+		
+		ESPTerm contains two persistent memory banks, one for default and 
+		one for active settings. Active settings can be stored as defaults 
+		by the administrator (password required).
+			</div>
+
+	<div class="Row buttons2">
+		<a class="button icn-restore"
+		   onclick="return confirm('Restore all settings to their default values?');"
+		   href="restore_defaults.html">
+			Reset active settings to defaults		</a>
+	</div>
+
+	<div class="Row buttons2">
+		<a onclick="writeDefaults(); return false;" href="#">Save active settings as defaults</a>
+	</div>
+
+	<div class="Row buttons2">
+		<a onclick="return confirm('Restore to firmware default settings? This will reset all active settings and switch to AP mode with the default SSID.');"
+		   href="restore_hard.html">
+			Reset active settings to firmware defaults		</a>
+	</div>
+</div>
+
+
+<form class="Box str mobcol" action="system_set.html" method="GET" id="form-1">
+	<h2 tabindex=0>Serial Port</h2>
+
+	<div class="Row explain">
+		
+		This form controls the primary, communication UART. The debug UART is fixed at 115.200 baud, one stop-bit and no parity.
+			</div>
+
+	<div class="Row">
+		<label for="uart_baud">Baud rate<span class="mq-phone">&nbsp;(bps)</span></label>
+		<select name="uart_baud" id="uart_baud" class="short">
+			<option value="300">300</option>
+			<option value="600">600</option>
+			<option value="1200">1.200</option>
+			<option value="2400">2.400</option>
+			<option value="4800">4.800</option>
+			<option value="9600">9.600</option>
+			<option value="19200">19.200</option>
+			<option value="38400">38.400</option>
+			<option value="57600">57.600</option>
+			<option value="74880">74.880</option>
+			<option value="115200">115.200</option>
+			<option value="230400">230.400</option>
+			<option value="460800">460.800</option>
+			<option value="921600">921.600</option>
+			<option value="1843200">1.843.200</option>
+			<option value="3686400">3.686.400</option>
+					</select>
+		<span class="mq-no-phone">&nbsp;bps</span>
+	</div>
+
+	<div class="Row">
+		<label for="uart_parity">Parity</label>
+		<select name="uart_parity" id="uart_parity" class="short">
+			<option value="2">None</option>
+			<option value="1">Odd</option>
+			<option value="0">Even</option>
+					</select>
+	</div>
+
+	<div class="Row">
+		<label for="uart_stopbits">Stop-bits</label>
+		<select name="uart_stopbits" id="uart_stopbits" class="short">
+			<option value="1">One</option>
+			<option value="2">One and half</option>
+			<option value="3">Two</option>
+					</select>
+	</div>
+
+	<div class="Row buttons">
+		<a class="button icn-ok" href="#" onclick="qs('#form-1').submit()">Apply!</a>
+	</div>
+</form>
+
+<script>
+	function writeDefaults() {
+		var pw = prompt('Enter admin password to confirm you want to store the current settings as defaults.');
+		if (!pw) return;
+		location.href = "write_defaults.html" + '?pw=' + pw;
+	}
+
+	$('#uart_baud').val(115200);
+	$('#uart_parity').val(2);
+	$('#uart_stopbits').val(1);
+</script>
+
+<div class="botpad"></div>
+
+<div class="NotifyMsg hidden" id="notif"></div>
+
+</div>
+
+</div>
+
+</body>
+</html>

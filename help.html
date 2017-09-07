@@ -1,0 +1,959 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Quick Reference :: ESPTerm</title>
+	<link href="/css/app.css" rel="stylesheet">
+	<script src="/js/app.js"></script>
+	<script>
+		var _root = location.host;
+		var _demo = 1;
+					</script>
+</head>
+<body class="cfg page-help">
+<div id="outer">
+<nav id="menu">
+	<div id="brand" tabindex=0>ESPTerm</div>
+	<a href="term.html" class="icn-back">Back to Terminal</a>
+	<a href="cfg_term.html" class="icn-terminal ">Terminal Settings</a><a href="cfg_wifi.html" class="icn-wifi ">WiFi Settings</a><a href="cfg_network.html" class="icn-network ">Network Settings</a><a href="cfg_system.html" class="icn-configure ">System Settings</a><a href="help.html" class="icn-help selected">Quick Reference</a><a href="about.html" class="icn-about ">About ESPTerm</a></nav>
+
+<script>
+	function menuOpen() { $('#menu').toggleClass('expanded') }
+	$('#brand').on('click', menuOpen).on('keypress', cr(menuOpen));
+</script>
+
+<div id="content">
+<img src="/img/loader.gif" alt="Loading…" id="loader">
+<h1>Quick Reference</h1>
+
+<div class="Box errors hidden">
+	<span class="lead">Validation errors for:</span>&nbsp;<span class="list"></span>
+</div>
+
+<div class="Box">
+	<a href="#" onclick="hpfold(1);return false">Expand all</a>&nbsp;|&nbsp;<a href="#" onclick="hpfold(0);return false">Collapse all</a>
+</div>
+
+<div class="Box fold">
+	<h2>Tips & Troubleshooting</h2>
+
+	<div class="Row v">
+		<ul>
+			<li><b>Communication UART (Rx, Tx)</b> can be configured in the <a href="cfg_system.html">System Settings</a>.
+
+			<li><b>Boot log and debug messages</b> are available on pin <b>GPIO2</b> (P2) at 115200&#8239;baud, 1 stop bit, no parity.
+				Those messages may be disabled through compile flags.
+
+			<li><b>Loopback test</b>: Connect the Rx and Tx pins with a piece of wire. Anything you type in the browser should
+				appear on the screen. Set <i>Parser Timeout = 0</i> in <a href="cfg_term.html">Terminal Settings</a>
+				to be able to manually enter escape sequences.
+
+			<li>There is very little RAM available to the webserver, and it can support at most 4 connections at the same time.
+				Each terminal session (open window with the terminal screen) uses one persistent connection for screen updates.
+				<b>Avoid leaving unused windows open</b>, or either the RAM or connections may be exhausted.
+
+			<li><b>For best performance</b>, use the module in Client mode (connected to external network) and minimize the number
+				of simultaneous connections. Enabling AP consumes extra RAM because the DHCP server and Captive Portal
+				DNS server are started.
+
+			<li>In AP mode, <b>check that the WiFi channel used is clear</b>; interference may cause flaky connection.
+				A good mobile app to use for this is
+				<a href="https://play.google.com/store/apps/details?id=com.farproc.wifi.analyzer">WiFi Analyzer (Google Play)</a>.
+				Adjust the hotspot strength and range using the <i>Tx Power setting</i>.
+
+			<li>Hold the BOOT button (GPIO0 to GND) for ~1 second to force enable AP. Hold it for ~6 seconds to restore default settings.
+				(This is indicated by the blue LED rapidly flashing). Default settings can be overwritten in the
+				<a href="cfg_system.html">System Settings</a>.
+		</ul>
+	</div>
+</div>
+
+<div class="Box fold">
+	<h2>Basic Intro & Nomenclature</h2>
+
+	<div class="Row v">
+		<img src="/img/vt100.jpg" class="aside" alt="VT102">
+
+		<p>
+			ESPTerm emulates VT102 (pictured) with some additions from later VT models and Xterm.
+			All commonly used attributes and commands are supported.
+			ESPTerm is capable of displaying ncurses applications such as <i>Midnight Commander</i> using <i>agetty</i>.
+		</p>
+
+		<p>
+			ESPTerm accepts UTF-8 characters received on the communication UART and displays them on the screen,
+			interpreting some codes as Control Characters. Those are e.g. <i>Carriage Return</i> (13), <i>Line Feed</i> (10),
+			<i>Tab</i> (9), <i>Backspace</i> (8) and <i>Bell</i> (7).
+		</p>
+
+		<p>
+			Escape sequences start with the control character <i>ESC</i> (27),
+			followed by any number of ASCII characters forming the body of the command.
+		</p>
+
+		<h3>Nomenclature & Command Types</h3>
+
+		<p>
+			Examples on this help page use the following symbols for special characters and command types:<br>(spaces are for clarity only, <i>DO NOT</i> include them in the commands!)
+		</p>
+
+		<div class="tscroll">
+			<table class="nomen">
+				<thead><tr><th>Name</th><th>Symbol</th><th>ASCII</th><th>C string</th><th>Function</th></tr></thead>
+				<tbody>
+				<tr>
+					<td><b>ESC</b></td>
+					<td><code>\e</code></td>
+					<td><code>ESC</code> (27)</td>
+					<td><code>"\e"</code>, <code>"\x1b"</code>, <code>"\033"</code></td>
+					<td>Introduces an escape sequence. <i>(Note: <code>\e</code> is a GCC extension)</i></td>
+				</tr>
+				<tr>
+					<td><b>Bell</b></td>
+					<td><code>\a</code></td>
+					<td><code>BEL</code>&nbsp;(7)</td>
+					<td><code>"\a"</code>, <code>"\x7"</code>, <code>"\07"</code></td>
+					<td>Audible beep</td>
+				</tr>
+				<tr>
+					<td><b>String Terminator</b></td>
+					<td><code>ST</code></td>
+					<td><code>ESC \</code>&nbsp;(27&nbsp;92)<br><i>or</i>&nbsp;<code>\a</code>&nbsp;(7)</td>
+					<td><code>"\x1b\\"</code>, <code>"\a"</code></td>
+					<td>Terminates a string command (<code>\a</code> can be used as an alternative)</td>
+				</tr>
+				<tr>
+					<td><b>Control Sequence Introducer</b></td>
+					<td><code>CSI</code></td>
+					<td><code>ESC [</code></td>
+					<td><code>"\x1b["</code></td>
+					<td>Starts a CSI command. Examples: <code>\e[?7;10h</code>, <code>\e[2J</code></td>
+				</tr>
+				<tr>
+					<td><b>Operating System Command</b></td>
+					<td><code>OSC</code></td>
+					<td><code>ESC ]</code></td>
+					<td><code>"\x1b]"</code></td>
+					<td>Starts an OSC command. Is followed by a command string terminated by <code>ST</code>. Example: <code>\e]0;My Screen Title\a</code></td>
+				</tr>
+				<tr>
+					<td><b>Select Graphic Rendition</b></td>
+					<td><code>SGR</code></td>
+					<td><code>CSI <i>n</i>;<i>n</i>;<i>n</i>m</code></td>
+					<td><code>"\x1b[1;2;3m"</code></td>
+					<td>Set text attributes, like color or style. 0 to 10 numbers can be used, <code>\e[m</code> is treated as <code>\e[0m</code></td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<p>There are also some other commands that don't follow the CSI, SGR or OSC pattern, such as <code>\e7</code> or
+			<code>\e#8</code>. A list of the most important escape sequences is presented in the following sections.</p>
+	</div>
+</div>
+
+<div class="Box fold">
+	<h2>Screen Behavior & Refreshing</h2>
+
+	<div class="Row v">
+		<p>
+			The initial screen size, title text and button labels can be configured in <a href="cfg_term.html">Terminal Settings</a>.
+		</p>
+
+		<p>
+			Screen updates are sent to the browser through a WebSocket after some time of inactivity on the communication UART
+			(called "Redraw Delay"). After an update is sent, at least a time of "Redraw Cooldown" must elapse before the next
+			update can be sent. Those delays are used is to avoid burdening the server with tiny updates during a large screen
+			repaint. If you experience issues (broken image due to dropped bytes), try adjusting those config options. It may also
+			be useful to try different baud rates.
+		</p>
+	</div>
+</div>
+
+
+<div class="Box fold">
+	<h2>User Input: Keyboard, Mouse</h2>
+
+	<div class="Row v">
+		<h3>Keyboard</h3>
+
+		<p>
+			The user can input text using their keyboard, or on Android, using the on-screen keyboard which is open using
+			a button beneath the screen. Supported are all printable characters, as well as many control keys, such as arrows, <i>Ctrl+letters</i>
+			and function keys. Sequences sent by function keys are based on VT102 and Xterm.
+		</p>
+
+		<p>
+			The codes sent by <i>Home</i>, <i>End</i>, <i>F1-F4</i> and cursor keys are affected by various keyboard modes (<i>Application Cursor Keys</i>,
+			<i>Application Numpad Mode</i>, <i>SS3 Fn Keys Mode</i>). Some can be set in the <a href="cfg_term.html">Terminal Settings</a>,
+			others via commands.
+		</p>
+
+		<p>
+			Here are some examples of control key codes:
+		</p>
+
+		<table>
+			<thead><tr><th>Key</th><th>Code</th><th>Key</th><th>Code</th></tr></thead>
+			<tr>
+				<td>Up</td>
+				<td><code>\e[A</code>,&nbsp;<code>\eOA</code></td>
+				<td>F1</td>
+				<td><code>\eOP</code>,&nbsp;<code>\e[11~</code></td>
+			</tr>
+			<tr>
+				<td>Down</td>
+				<td><code>\e[B</code>,&nbsp;<code>\eOB</code></td>
+				<td>F2</td>
+				<td><code>\eOQ</code>,&nbsp;<code>\e[12~</code></td>
+			</tr>
+			<tr>
+				<td>Right</td>
+				<td><code>\e[C</code>,&nbsp;<code>\eOC</code></td>
+				<td>F3</td>
+				<td><code>\eOR</code>,&nbsp;<code>\e[13~</code></td>
+			</tr>
+			<tr>
+				<td>Left</td>
+				<td><code>\e[D</code>,&nbsp;<code>\eOD</code></td>
+				<td>F4</td>
+				<td><code>\eOS</code>,&nbsp;<code>\e[14~</code></td>
+			</tr>
+			<tr>
+				<td>Home</td>
+				<td><code>\eOH</code>,&nbsp;<code>\e[H</code>,&nbsp;<code>\e[1~</code></td>
+				<td>F5</td>
+				<td><code>\e[15&nbsp;</code></td>
+			</tr>
+			<tr>
+				<td>End</td>
+				<td><code>\eOF</code>,&nbsp;<code>\e[F</code>,&nbsp;<code>\e[4~</code></td>
+				<td>F6</td>
+				<td><code>\e[17~</code></td>
+			</tr>
+			<tr>
+				<td>Insert</td>
+				<td><code>\e[2~</code></td>
+				<td>F7</td>
+				<td><code>\e[18~</code></td>
+			</tr>
+			<tr>
+				<td>Delete</td>
+				<td><code>\e[3~</code></td>
+				<td>F8</td>
+				<td><code>\e[19~</code></td>
+			</tr>
+			<tr>
+				<td>Page Up</td>
+				<td><code>\e[5~</code></td>
+				<td>F9</td>
+				<td><code>\e[20~</code></td>
+			</tr>
+			<tr>
+				<td>Page Down</td>
+				<td><code>\e[6~</code></td>
+				<td>F10</td>
+				<td><code>\e[21~</code></td>
+			</tr>
+			<tr>
+				<td>Enter</td>
+				<td><code>\r</code> (13)</td>
+				<td>F11</td>
+				<td><code>\e[23~</code></td>
+			</tr>
+			<tr>
+				<td>Ctrl+Enter</td>
+				<td><code>\n</code> (10)</td>
+				<td>F12</td>
+				<td><code>\e[24~</code></td>
+			</tr>
+			<tr>
+				<td>Tab</td>
+				<td><code>\t</code> (9)</td>
+				<td>ESC</td>
+				<td><code>\e</code> (27)</td>
+			</tr>
+			<tr>
+				<td>Backspace</td>
+				<td><code>\b</code> (8)</td>
+				<td>Ctrl+A..Z</td>
+				<td>ASCII 1-26</td>
+			</tr>
+		</table>
+
+		<h3>Action buttons</h3>
+
+		<p>
+			The blue buttons under the screen send ASCII codes 1, 2, 3, 4, 5, which incidentally
+			correspond to <i>Ctrl+A,B,C,D,E</i>. This choice was made to make button press parsing as simple as possible.
+		</p>
+
+		<h3>Mouse</h3>
+
+		<p>
+			ESPTerm implements standard mouse tracking modes based on Xterm. Mouse tracking can be used to implement
+			powerful user interactions such as on-screen buttons, draggable sliders or dials, menus etc. ESPTerm's
+			mouse tracking was tested using VTTest and should be compatible with all terminal applications
+			that request mouse tracking.
+		</p>
+
+		<p>
+			Mouse can be tracked in different ways; some are easier to parse, others more powerful. The coordinates
+			can also be encoded in different ways. All mouse tracking options are set using option commands:
+			<code>CSI ? <i>n</i> h</code> to enable, <code>CSI ? <i>n</i> l</code> to disable option <i>n</i>.
+		</p>
+
+		<h4>Mouse Tracking Modes</h4>
+
+		<p>
+			All tracking modes produce three numbers which are then encoded and send to the application.
+			First is the <i>event number</i> N, then the <i>X and Y coordinates</i>, 1-based.
+		</p>
+
+		<p>
+			Mouse buttons are numbered: 1=left, 2=middle, 3=right.
+			Wheel works as two buttons (4 and 5) which generate only press events (no release).
+		</p>
+
+		<div class="tscroll">
+			<table class="nomen">
+				<thead><tr><th>Option</th><th>Name</th><th>Description</th></tr></thead>
+				<tr>
+					<td><code>9</code></td>
+					<td><b>X10&nbsp;mode</b></td>
+					<td>
+						This is the most basic tracking mode, in which <b>only button presses</b> are reported.
+						N = button - 1: (0 left, 1 middle, 2 right, 3, 4 wheel).
+					</td>
+				</tr>
+				<tr>
+					<td><code>1000</code></td>
+					<td><b>Normal&nbsp;mode</b></td>
+					<td>
+						In Normal mode, both button presses and releases are reported.
+						The lower two bits of N indicate the button pressed:
+						<code>00b</code> (0) left, <code>01b</code> (1) middle, <code>10b</code> (2) right, <code>11b</code> (3) button release.
+						Wheel buttons are reported as 0 and 1 with added 64 (e.g. 64 and 65).
+						Normal mode also supports tracking of modifier keys, which are added to N as bit masks:
+						4=<i>Shift</i>, 8=<i>Meta/Alt</i>, 16=<i>Control/Cmd</i>. Example: middle button with <i>Shift</i> = 1 + 4 = <code>101b</code> (5).
+					</td>
+				</tr>
+				<tr>
+					<td><code>1002</code></td>
+					<td><b>Button-Event tracking</b></td>
+					<td>
+						This is similar to Normal mode (<code>1000</code>), but mouse motion with a button held is also reported.
+						A motion event is generated when the mouse cursor moves between screen character cells.
+						A motion event has the same N as a press event, but 32 is added.
+						For example, drag-drop event with the middle button will produce N = 1 (press), 33 (dragging) and 3 (release).
+					</td>
+				</tr>
+				<tr>
+					<td><code>1003</code></td>
+					<td><b>Any-Event tracking</b></td>
+					<td>
+						This mode is almost identical to Button Event tracking (1002), but motion events
+						are sent even when no mouse buttons are held. This could be used to draw on-screen mouse cursor, for example.
+						Motion events with no buttons will use N = 32 + <i>11b</i> (35).
+					</td>
+				</tr>
+				<tr>
+					<td><code>1004</code></td>
+					<td><b>Focus&nbsp;tracking</b></td>
+					<td>
+						Focus tracking is a separate function from the other mouse tracking modes, therefore they can be enabled together.
+						Focus tracking reports when the terminal window (in Xterm) gets or loses focus, or in ESPTerm's case, when any
+						user is connected. This can be used to pause/resume a game or on-screen animations.
+						Focus tracking mode sends <code>CSI I</code> when the terminal receives, and <code>CSI O</code> when it loses focus.
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<h4>Mouse Report Encoding</h4>
+
+		<p>
+			The following encoding schemes can be used with any of the tracking modes (except Focus tracking, which is not affected).
+		</p>
+
+		<div class="tscroll">
+			<table class="nomen">
+				<thead><tr><th>Option</th><th>Name</th><th>Description</th></tr></thead>
+				<tr>
+					<td>--</td>
+					<td><b>Normal&nbsp;encoding</b></td>
+					<td>
+						This is the default encoding scheme used when no other option is selected.
+						In this mode, a mouse report has the format <code>CSI M <i>n</i> <i>x</i> <i>y</i></code>,
+						where <i>n</i>, <i>x</i> and <i>y</i> are characters with ASCII value = 32 (space) + the respective number, e.g.
+						0 becomes 32 (space), 1 becomes 33 (!). The reason for adding 32 is to avoid producing control characters.
+						Example: <code>\e[M !!</code> - left button press at coordinates 1,1 when using X10 mode.
+					</td>
+				</tr>
+				<tr>
+					<td><code>1005</code></td>
+					<td><b>UTF-8&nbsp;encoding</b></td>
+					<td>
+						This scheme should encode each of the numbers as a UTF-8 code point, expanding the maximum possible value.
+						Since ESPTerm's screen size is limited and this has no practical benefit, this serves simply as an alias
+						to the normal scheme.
+					</td>
+				</tr>
+				<tr>
+					<td><code>1006</code></td>
+					<td><b>SGR&nbsp;encoding</b></td>
+					<td>
+						In SGR encoding, the response looks like a SGR sequence with the three numbers as semicolon-separated
+						ASCII values. In this case 32 is not added like in the Normal and UTF-8 schemes, because
+						it would serve nor purpose here. Also, button release is not reported as 11b,
+						but using the normal button code while changing the final SGR character: <code>M</code> for button press
+						and <code>m</code> for button release. Example: <code>\e[2;80;24m</code> - the right button was released
+						at row 80, column 24.
+					</td>
+				</tr>
+				<tr>
+					<td><code>1015</code></td>
+					<td><b>URXVT&nbsp;encoding</b></td>
+					<td>
+						This is similar to SGR encoding, but the final character is always <code>M</code> and the numbers are
+						like in the Normal scheme, with 32 added. This scheme has no real advantage over the previous schemes and
+						was added solely for completeness.
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="Box fold">
+	<h2>Alternate Character Sets</h2>
+
+	<div class="Row v">
+		<p>
+			ESPTerm implements Alternate Character Sets as a way to print box drawing characters
+			and special symbols. A character set can change what each received ASCII character
+			is printed as on the screen (eg. "{" is "π" in codepage <code>0</code>). The implementation is based
+			on the original VT devices.
+		</p>
+
+		<p>
+			Since ESPTerm also supports UTF-8, this feature is the most useful for applications
+			which can't print UTF-8 or already use alternate character sets for historical reasons.
+		</p>
+
+		<h3>Supported codepages</h3>
+
+		<ul>
+			<li><code>B</code> - US ASCII (default)</li>
+			<li><code>A</code> - UK ASCII: # replaced with £</li>
+			<li><code>0</code> - Symbols and basic line drawing (standard DEC alternate character set)</li>
+			<li><code>1</code> - Symbols and advanced line drawing (based on DOS codepage 437, ESPTerm specific)</li>
+		</ul>
+
+		<p>
+			All codepages use codes 32-127, 32 being space. A character with no entry in the active codepage
+			stays unchanged.
+		</p>
+
+		<h4>Codepage <code>A</code></h4>
+<div class="charset"><div><span>35</span><span>#</span><span>₤</span></div></div><h4>Codepage <code>0</code></h4>
+<div class="charset"><div><span>96</span><span>`</span><span>♦</span></div><div><span>97</span><span>a</span><span>▒</span></div><div><span>98</span><span>b</span><span>␉</span></div><div><span>99</span><span>c</span><span>␌</span></div><div><span>100</span><span>d</span><span>␍</span></div><div><span>101</span><span>e</span><span>␊</span></div><div><span>102</span><span>f</span><span>°</span></div><div><span>103</span><span>g</span><span>±</span></div><div><span>104</span><span>h</span><span>␤</span></div><div><span>105</span><span>i</span><span>␋</span></div><div><span>106</span><span>j</span><span>┘</span></div><div><span>107</span><span>k</span><span>┐</span></div><div><span>108</span><span>l</span><span>┌</span></div><div><span>109</span><span>m</span><span>└</span></div><div><span>110</span><span>n</span><span>┼</span></div><div><span>111</span><span>o</span><span>⎺</span></div><div><span>112</span><span>p</span><span>⎻</span></div><div><span>113</span><span>q</span><span>─</span></div><div><span>114</span><span>r</span><span>⎼</span></div><div><span>115</span><span>s</span><span>⎽</span></div><div><span>116</span><span>t</span><span>├</span></div><div><span>117</span><span>u</span><span>┤</span></div><div><span>118</span><span>v</span><span>┴</span></div><div><span>119</span><span>w</span><span>┬</span></div><div><span>120</span><span>x</span><span>│</span></div><div><span>121</span><span>y</span><span>≤</span></div><div><span>122</span><span>z</span><span>≥</span></div><div><span>123</span><span>{</span><span>π</span></div><div><span>124</span><span>|</span><span>≠</span></div><div><span>125</span><span>}</span><span>₤</span></div><div><span>126</span><span>~</span><span>·</span></div></div><h4>Codepage <code>1</code></h4>
+<div class="charset"><div><span>33</span><span>!</span><span>☺</span></div><div><span>34</span><span>"</span><span>☻</span></div><div><span>35</span><span>#</span><span>♥</span></div><div><span>36</span><span>$</span><span>♦</span></div><div><span>37</span><span>%</span><span>♣</span></div><div><span>38</span><span>&</span><span>♠</span></div><div><span>39</span><span>'</span><span>•</span></div><div><span>40</span><span>(</span><span>⌛</span></div><div><span>41</span><span>)</span><span>○</span></div><div><span>42</span><span>*</span><span>↯</span></div><div><span>43</span><span>+</span><span>♪</span></div><div><span>44</span><span>,</span><span>♫</span></div><div><span>45</span><span>-</span><span>☼</span></div><div><span>46</span><span>.</span><span>⌂</span></div><div><span>47</span><span>/</span><span>☢</span></div><div><span>48</span><span>0</span><span>░</span></div><div><span>49</span><span>1</span><span>▒</span></div><div><span>50</span><span>2</span><span>▓</span></div><div><span>51</span><span>3</span><span>│</span></div><div><span>52</span><span>4</span><span>┤</span></div><div><span>53</span><span>5</span><span>╡</span></div><div><span>54</span><span>6</span><span>╢</span></div><div><span>55</span><span>7</span><span>╖</span></div><div><span>56</span><span>8</span><span>╕</span></div><div><span>57</span><span>9</span><span>╣</span></div><div><span>58</span><span>:</span><span>║</span></div><div><span>59</span><span>;</span><span>╗</span></div><div><span>60</span><span><</span><span>╝</span></div><div><span>61</span><span>=</span><span>╜</span></div><div><span>62</span><span>></span><span>╛</span></div><div><span>63</span><span>?</span><span>┐</span></div><div><span>64</span><span>@</span><span>└</span></div><div><span>65</span><span>A</span><span>┴</span></div><div><span>66</span><span>B</span><span>┬</span></div><div><span>67</span><span>C</span><span>├</span></div><div><span>68</span><span>D</span><span>─</span></div><div><span>69</span><span>E</span><span>┼</span></div><div><span>70</span><span>F</span><span>╞</span></div><div><span>71</span><span>G</span><span>╟</span></div><div><span>72</span><span>H</span><span>╚</span></div><div><span>73</span><span>I</span><span>╔</span></div><div><span>74</span><span>J</span><span>╩</span></div><div><span>75</span><span>K</span><span>╦</span></div><div><span>76</span><span>L</span><span>╠</span></div><div><span>77</span><span>M</span><span>═</span></div><div><span>78</span><span>N</span><span>╬</span></div><div><span>79</span><span>O</span><span>╧</span></div><div><span>80</span><span>P</span><span>╨</span></div><div><span>81</span><span>Q</span><span>╤</span></div><div><span>82</span><span>R</span><span>╥</span></div><div><span>83</span><span>S</span><span>╙</span></div><div><span>84</span><span>T</span><span>╘</span></div><div><span>85</span><span>U</span><span>╒</span></div><div><span>86</span><span>V</span><span>╓</span></div><div><span>87</span><span>W</span><span>╫</span></div><div><span>88</span><span>X</span><span>╪</span></div><div><span>89</span><span>Y</span><span>┘</span></div><div><span>90</span><span>Z</span><span>┌</span></div><div><span>91</span><span>[</span><span>█</span></div><div><span>92</span><span>\</span><span>▄</span></div><div><span>93</span><span>]</span><span>▌</span></div><div><span>94</span><span>^</span><span>▐</span></div><div><span>95</span><span>_</span><span>▀</span></div><div><span>96</span><span>`</span><span>↕</span></div><div><span>97</span><span>a</span><span>↑</span></div><div><span>98</span><span>b</span><span>↓</span></div><div><span>99</span><span>c</span><span>→</span></div><div><span>100</span><span>d</span><span>←</span></div><div><span>101</span><span>e</span><span>↔</span></div><div><span>102</span><span>f</span><span>▲</span></div><div><span>103</span><span>g</span><span>▼</span></div><div><span>104</span><span>h</span><span>►</span></div><div><span>105</span><span>i</span><span>◄</span></div><div><span>106</span><span>j</span><span>◢</span></div><div><span>107</span><span>k</span><span>◣</span></div><div><span>108</span><span>l</span><span>◤</span></div><div><span>109</span><span>m</span><span>◥</span></div><div><span>110</span><span>n</span><span>╭</span></div><div><span>111</span><span>o</span><span>╮</span></div><div><span>112</span><span>p</span><span>╯</span></div><div><span>113</span><span>q</span><span>╰</span></div><div class="none"><span>114</span><span>r</span><span>r</span></div><div class="none"><span>115</span><span>s</span><span>s</span></div><div class="none"><span>116</span><span>t</span><span>t</span></div><div class="none"><span>117</span><span>u</span><span>u</span></div><div class="none"><span>118</span><span>v</span><span>v</span></div><div class="none"><span>119</span><span>w</span><span>w</span></div><div class="none"><span>120</span><span>x</span><span>x</span></div><div class="none"><span>121</span><span>y</span><span>y</span></div><div class="none"><span>122</span><span>z</span><span>z</span></div><div class="none"><span>123</span><span>{</span><span>{</span></div><div class="none"><span>124</span><span>|</span><span>|</span></div><div><span>125</span><span>}</span><span>✔</span></div><div><span>126</span><span>~</span><span>✘</span></div></div>
+		<h3>Switching commands</h3>
+
+		<p>
+			There are two character set slots, G0 and G1.
+			Those slots are selected as active using ASCII codes Shift In and Shift Out (those originally served for shifting
+			a red-black typewriter tape). Often only G0 is used for simplicity.
+		</p>
+
+		<p>
+			Each slot (G0 and G1) can have a different codepage assigned. G0 and G1 and the active slot number are
+			saved and restored with the cursor and cleared with a screen reset (<code>\ec</code>).
+		</p>
+
+		<p>The following commands are used:</p>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td><code>\e(<i>x</i></code></td>
+				<td>Set G0 = codepage <i>x</i></td>
+			</tr>
+			<tr>
+				<td><code>\e)<i>x</i></code></td>
+				<td>Set G1 = codepage <i>x</i></td>
+			</tr>
+			<tr>
+				<td><i>SO</i> (14)</td>
+				<td>Activate G0</td>
+			</tr>
+			<tr>
+				<td><i>SI</i> (15)</td>
+				<td>Activate G1</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<div class="Box fold">
+	<h2>Commands: Style SGR</h2>
+
+	<div class="Row v">
+		<p>
+			All text attributes are set using SGR commands like <code>\e[10;20;30m</code>, with up to 10 numbers separated by semicolons.
+			To restore all attributes to their default states, use SGR 0: <code>\e[0m</code> or <code>\e[m</code>.
+		</p>
+
+		<p>Those are the supported text attributes SGR codes:</p>
+
+		<table>
+			<thead><tr><th>Style</th><th>Enable</th><th>Disable</th></tr></thead>
+			<tbody>
+			<tr><td><b>Bold</b></td><td>1</td><td>21, 22</td></tr>
+			<tr><td style="opacity:.6">Faint</td><td>2</td><td>22</td></tr>
+			<tr><td><i>Italic</i></td><td>3</td><td>23</td></tr>
+			<tr><td><u>Underlined</u></td><td>4</td><td>24</td></tr>
+			<tr><td>Blink</td><td>5</td><td>25</td></tr>
+			<tr><td><span style="color:black;background:#ccc;">Inverse</span></td><td>7</td><td>27</td></tr>
+			<tr><td><s>Striked</s></td><td>9</td><td>29</td></tr>
+			<tr><td>𝔉𝔯𝔞𝔨𝔱𝔲𝔯</td><td>20</td><td>23</td></tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<div class="Box fold theme-0">
+	<h2>Commands: Color SGR</h2>
+
+	<div class="Row v">
+		<p>
+			Colors are set using SGR commands (like <code>\e[10;20;30m</code>). The following tables list the SGR codes to use.
+			Selected colors are used for any new text entered, as well as for empty space when using line and screen clearing commands.
+			The configured default colors can be restored using SGR 39 for foreground and SGR 49 for background.
+		</p>
+
+		<p>
+			The actual color representation depends on a color theme which
+			can be selected in <a href="cfg_term.html">Terminal Settings</a>.
+		</p>
+
+		<h3>Foreground colors</h3>
+
+		<div class="colorprev">
+			<span class="bg7 fg0">30</span>
+			<span class="bg0 fg1">31</span>
+			<span class="bg0 fg2">32</span>
+			<span class="bg0 fg3">33</span>
+			<span class="bg0 fg4">34</span>
+			<span class="bg0 fg5">35</span>
+			<span class="bg0 fg6">36</span>
+			<span class="bg0 fg7">37</span>
+		</div>
+
+		<div class="colorprev">
+			<span class="bg0 fg8">90</span>
+			<span class="bg0 fg9">91</span>
+			<span class="bg0 fg10">92</span>
+			<span class="bg0 fg11">93</span>
+			<span class="bg0 fg12">94</span>
+			<span class="bg0 fg13">95</span>
+			<span class="bg0 fg14">96</span>
+			<span class="bg0 fg15">97</span>
+		</div>
+
+		<h3>Background colors</h3>
+
+		<div class="colorprev">
+			<span class="bg0 fg15">40</span>
+			<span class="bg1 fg15">41</span>
+			<span class="bg2 fg15">42</span>
+			<span class="bg3 fg0">43</span>
+			<span class="bg4 fg15">44</span>
+			<span class="bg5 fg15">45</span>
+			<span class="bg6 fg15">46</span>
+			<span class="bg7 fg0">47</span>
+		</div>
+
+		<div class="colorprev">
+			<span class="bg8 fg15">100</span>
+			<span class="bg9 fg0">101</span>
+			<span class="bg10 fg0">102</span>
+			<span class="bg11 fg0">103</span>
+			<span class="bg12 fg0">104</span>
+			<span class="bg13 fg0">105</span>
+			<span class="bg14 fg0">106</span>
+			<span class="bg15 fg0">107</span>
+		</div>
+	</div>
+</div>
+
+<div class="Box fold">
+	<h2>Commands: Cursor Functions</h2>
+
+	<div class="Row v">
+		<p>
+			The coordinates are 1-based, origin is top left. The cursor can move within the entire screen,
+			or in the active Scrolling Region if Origin Mode is enabled.
+		</p>
+
+		<p>After writing a character, the cursor advances to the right. If it has reached the end of the row,
+			it stays on the same line, but writing the next character makes it jump to the start of the next
+			line first, scrolling up if needed. If Auto-wrap mode is disabled, the cursor never wraps or scrolls
+			the screen.
+		</p>
+
+		<p>
+			<b>Legend:</b>
+			Italic letters such as <i>n</i> are ASCII numbers that serve as arguments, separated with a semicolon.
+			If an argument is left out, it's treated as 0 or 1, depending on what makes sense for the command.
+		</p>
+
+		<h3>Movement</h3>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td>
+					<code>
+						\e[<i>n</i>A<br>\e[<i>n</i>B<br>\e[<i>n</i>C<br>\e[<i>n</i>D
+					</code>
+				</td>
+				<td>Move cursor up (<code>A</code>), down (<code>B</code>), right (<code>C</code>), left (<code>D</code>)</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[<i>n</i>F<br>\e[<i>n</i>E
+					</code>
+				</td>
+				<td>Go <i>n</i> lines up (<code>F</code>) or down (<code>E</code>), start of line</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[<i>r</i>d<br>\e[<i>c</i>G<br>\e[<i>r</i>;<i>c</i>H
+					</code>
+				</td>
+				<td>
+					Go to absolute position - row (<code>d</code>), column (<code>G</code>), or both (<code>H</code>). Use <code>\e[H</code> to go to 1,1.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>\e[6n</code>
+				</td>
+				<td>
+					Query cursor position. Sent back as <code>\e[<i>r</i>;<i>c</i>R</code>.
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h3>Save / restore</h3>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td>
+					<code>
+						\e[s<br>\e[u
+					</code>
+				</td>
+				<td>Save (<code>s</code>) or restore (<code>u</code>) cursor position</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e7<br>\e8
+					</code>
+				</td>
+				<td>Save (<code>7</code>) or restore (<code>8</code>) cursor position and attributes</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h3>Scrolling Region</h3>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td>
+					<code>\e[<i>a</i>;<i>b</i>r</code>
+				</td>
+				<td>
+					Set scrolling region to rows <i>a</i> through <i>b</i> and go to 1,1. By default, the
+					scrolling region spans the entire screen height. The cursor can leave the region using
+					absolute position commands, unless Origin Mode (see below) is active.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[?6h<br>\e[?6l
+					</code>
+				</td>
+				<td>
+					Enable (<code>h</code>) or disable (<code>l</code>) Origin Mode and go to 1,1. In Origin Mode, all coordinates
+					are relative to the Scrolling Region and the cursor can't leave the region.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[<i>n</i>S<br>\e[<i>n</i>T
+					</code>
+				</td>
+				<td>
+					Move contents of the Scrolling Region up (<code>S</code>) or down (<code>T</code>), pad with empty
+					lines of the current background color. This is similar to what happens when AutoWrap
+					is enabled and some text is printed at the very end of the screen.
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h3>Tab stops</h3>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td>
+					<code>\eH</code>
+				</td>
+				<td>
+					Set tab stop at the current column. There are, by default, tabs every 8 columns.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[<i>n</i>I<br>\e[<i>n</i>Z
+					</code>
+				</td>
+				<td>Advance (<code>I</code>) or go back (<code>Z</code>) <i>n</i> tab stops or end/start of line. ASCII <i>TAB</i> (9) is equivalent to <code>\e[1I</code></td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[0g<br>\e[3g<br></code>
+				</td>
+				<td>Clear tab stop at the current column (<code>0</code>), or all columns (<code>3</code>).</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h3>Other options</h3>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td>
+					<code>
+						\e[?7h<br>\e[?7l
+					</code>
+				</td>
+				<td>Enable (<code>h</code>) or disable (<code>l</code>) cursor auto-wrap and screen auto-scroll</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[?25h<br>\e[?25l
+					</code>
+				</td>
+				<td>Show (<code>h</code>) or hide (<code>l</code>) the cursor</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="Box fold">
+	<h2>Commands: Screen Functions</h2>
+
+	<div class="Row v">
+		<p>
+			<b>Legend:</b>
+			Italic letters such as <i>n</i> are ASCII numbers that serve as arguments, separated with a semicolon.
+			If an argument is left out, it's treated as 0 or 1, depending on what makes sense for the command.
+		</p>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td>
+					<code>\e[<i>m</i>J</code>
+				</td>
+				<td>
+					Clear part of screen. <i>m</i>: 0 - from cursor, 1 - to cursor, 2 - all
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>\e[<i>m</i>K</code>
+				</td>
+				<td>
+					Erase part of line. <i>m</i>: 0 - from cursor, 1 - to cursor, 2 - all
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>\e[<i>n</i>X</code></td>
+				<td>
+					Erase <i>n</i> characters in line.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[<i>n</i>L<br>\e[<i>n</i>M
+					</code>
+				</td>
+				<td>
+					Insert (<code>L</code>) or delete (<code>M</code>) <i>n</i> lines. Following lines are pulled up or pushed down.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[<i>n</i>@<br>\e[<i>n</i>P
+					</code>
+				</td>
+				<td>
+					Insert (<code>@</code>) or delete (<code>P</code>) <i>n</i> characters. The rest of the line is pulled left or pushed right.
+					Characters going past the end of line are lost.
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="Box fold">
+	<h2>Commands: System Functions</h2>
+
+	<div class="Row v">
+		<p>
+			It's possible to dynamically change the screen title text and action button labels.
+			Setting an empty label to a button makes it look disabled. The buttons send ASCII 1-5 when clicked.
+			Those changes are not retained after restart.
+		</p>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td><code>\ec</code></td>
+				<td>
+					Clear screen, reset attributes and cursor.
+					The screen size, title and button labels remain unchanged.
+				</td>
+			</tr>
+			<tr>
+				<td><code>\e[5n</code></td>
+				<td>
+					Query device status, ESPTerm replies with <code>\e[0n</code> "device is OK".
+					Can be used to check if the terminal has booted up and is ready to receive commands.
+				</td>
+			</tr>
+			<tr>
+				<td><i>CAN</i> (24)</td>
+				<td>
+					This ASCII code is not a command, but is sent by ESPTerm when it becomes ready to receive commands.
+					When this code is received on the UART, it means ESPTerm has restarted and is ready. Use this to detect
+					spontaneous restarts which require a full screen repaint.
+				</td>
+			</tr>
+			<tr>
+				<td><code>\e]0;<i>t</i>\a</code></td>
+				<td>Set screen title to <i>t</i> (this is a standard OSC command)</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e]<i>80+n</i>;<i>t</i>\a
+					</code>
+				</td>
+				<td>
+					Set label for button <i>n</i> = 1-5 (code 81-85) to <i>t</i> - e.g.<code>\e]81;Yes\a</code>
+					sets the first button text to "Yes".
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e]<i>90+n</i>;<i>m</i>\a
+					</code>
+				</td>
+				<td>
+					Set message for button <i>n</i> = 1-5 (code 81-85) to <i>m</i> - e.g.<code>\e]94;iv\a</code>
+					sets the 3rd button to send string "iv" when pressed.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[?800h<br>\e[?800l
+					</code>
+				</td>
+				<td>
+					Show (<code>h</code>) or hide (<code>l</code>) action buttons (the blue buttons under the screen).
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[?801h<br>\e[?801l
+					</code>
+				</td>
+				<td>
+					Show (<code>h</code>) or hide (<code>l</code>) menu/help links under the screen.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[12h<br>\e[12l
+					</code>
+				</td>
+				<td>
+					Enable (<code>h</code>) or disable (<code>l</code>) Send-Receive Mode (SRM).
+					SRM is the opposite of Local Echo, meaning <code>\e[12h</code> disables and <code>\e[12l</code> enables Local Echo.
+				</td>
+			</tr>
+			<tr>
+				<td><code>\e[8;<i>r</i>;<i>c</i>t</code></td>
+				<td>Set screen size to <i>r</i> rows and <i>c</i> columns (this is a command borrowed from Xterm)</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+<script>
+	function hpfold(yes) {
+		$('.fold').toggleClass('expanded', !!yes);
+	}
+</script>
+
+<div class="botpad"></div>
+
+<div class="NotifyMsg hidden" id="notif"></div>
+
+</div>
+
+</div>
+
+</body>
+</html>
