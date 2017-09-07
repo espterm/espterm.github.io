@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<meta charset="UTF-8">
+<title>VT100 emulation - useful references</title>
+</head>
+<style>
+body {
+  background: white;
+  color: black;
+  width: 825px;
+  margin:0 auto;
+  font-family:monospace;
+  line-height: 1.35em;
+  font-size: 12pt;
+}
+li,p {
+  white-space: pre;
+}
+ul, ol {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+li {
+  margin-bottom: 0.3em;
+}
+</style>
+
+<body>
+
+<p>VT100 emulation resources collection   Ondřej Hruška &lt;ondra@ondrovo.com&gt;, Sep 2017</p>
+
+<hr>
+
+<h1>VT100 emulation resources collection</h1>
+
+<p>This page lists some files and sites I found helpful when developing <a href="https://github.com/MightyPork/ESPTerm">ESPTerm</a>.</p>
+
+<h2>Web references</h2>
+
+<ul>
+  <li>An invaluable resource in my research was the website <a href="http://vt100.net/">vt100.net</a> which provides
+original manuals for manu VT models.</li>
+
+  <li>The <a href="http://invisible-island.net/xterm/ctlseqs/ctlseqs.html">Xterm manual page</a> also proved immensely useful. 
+I have even made a <a href="espterm-xterm.html">copy of it</a> with highlighted differences and missing features
+in ESPTerm.</li>
+
+  <li>Some sequences can also be found in the <a href="https://www.gnu.org/software/screen/manual/html_node/Control-Sequences.html">GNU Screen manual page</a></li>
+
+  <li>Application keys mode became clear after reading this page:
+<a href="http://www.tldp.org/HOWTO/Keyboard-and-Console-HOWTO-21.html">www.tldp.org/HOWTO/Keyboard-and-Console-HOWTO-21.html</a>.</li>
+
+  <li>When trying to understand what codes should be sent by function and control 
+keys, this page provided some great insight: 
+<a href="http://invisible-island.net/xterm/xterm-function-keys.html">invisible-island.net/xterm/xterm-function-keys.html</a></li>
+</ul>
+
+<h2>Collected files and memos</h2>
+
+<p>Those are some documents I've found on the internet while researching for ESPTerm
+and preserve them here for reference should the original sources disappear.</p>
+
+<ul>
+  <li><a href="./vt100.codes.txt">vt100.codes.txt</a></li>
+  <li><a href="./bjh21_all-escapes.txt">bjh21_all-escapes.txt</a></li>
+  <li><a href="./joesmith1984-ansicode.txt">joesmith1984-ansicode.txt</a></li>
+  <li><a href="./shuford_terminal_vt100_codes_news.txt">shuford_terminal_vt100_codes_news.txt</a></li>
+  <li><a href="./VT100 escape codes.html">VT100 escape codes.html</a></li>
+  <li><a href="./Locator Input Model for ANSI Terminals (sixth revision).html">Locator Input Model for ANSI Terminals (sixth revision).html</a></li>
+  <li><a href="./codepage437.txt">codepage437.txt</a> - a file I compiled from Wikipedia</li>
+</ul>
+
+<p>[End of document]</p>
