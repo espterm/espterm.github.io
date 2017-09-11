@@ -170,6 +170,18 @@
 		<input class="short" type="text" name="btn5" id="btn5" value="Help">
 	</div>
 
+	<div class="Row">
+		<label>Cursor style</label>
+		<select name="cursor_shape" id="cursor_shape">
+			<option value="0">Block, blinking</option>
+			<option value="2">Block, steady</option>
+			<option value="3">Underline, blinking</option>
+			<option value="4">Underline, steady</option>
+			<option value="5">I-bar, blinking</option>
+			<option value="6">I-bar, steady</option>
+		</select>
+	</div>
+
 	<div class="Row buttons">
 		<a class="button icn-ok" href="#" onclick="qs('#form-1').submit()">Apply!</a>
 	</div>
@@ -217,9 +229,15 @@
 	</div>
 
 	<div class="Row checkbox" >
+		<label>Enter sends CR+LF</label><!--
+		--><span class="box" tabindex=0 role=checkbox></span>
+		<input type="hidden" id="crlf_mode" name="crlf_mode" value="">
+	</div>
+
+	<div class="Row checkbox" >
 		<label>Show buttons</label><!--
 		--><span class="box" tabindex=0 role=checkbox></span>
-		<input type="hidden" id="show_buttons" name="show_buttons" value="1">
+		<input type="hidden" id="show_buttons" name="show_buttons" value="0">
 	</div>
 
 	<div class="Row checkbox" >
@@ -242,6 +260,7 @@
 <script>
 	$('#default_fg').val(7);
 	$('#default_bg').val(0);
+	$('#cursor_shape').val();
 	$('#theme').val(0);
 
 	function showColor() {
