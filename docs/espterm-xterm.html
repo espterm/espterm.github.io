@@ -603,7 +603,7 @@ CSI <i>Pm</i> `  Character Position Absolute  [column] (default = [row,1])
           (HPA).
 CSI <i>Pm</i> a  Character Position Relative  [columns] (default = [row,col+1])
           (HPR).
-<del>CSI <i>Ps</i> b  Repeat the preceding graphic character <i>Ps</i> times (REP).</del>
+CSI <i>Ps</i> b  Repeat the preceding graphic character <i>Ps</i> times (REP).
 CSI <i>Ps</i> c  Send Device Attributes (Primary DA).
             <i>Ps</i> = 0  or omitted -&gt; request attributes from terminal.  The
           response depends on the <b>decTerminalID</b> resource setting.
@@ -681,7 +681,7 @@ CSI ? <i>Pm</i> h
             <i>Ps</i> = 9  -&gt; Send Mouse X &amp; Y on button press.  See the sec-
           tion <b>Mouse</b> <b>Tracking</b>.  This is the X10 xterm mouse protocol.
             <del><i>Ps</i> = 1 0  -&gt; Show toolbar (rxvt).</del>
-            <del><i>Ps</i> = 1 2  -&gt; Start Blinking Cursor (att610).</del>
+            <i>Ps</i> = 1 2  -&gt; Start Blinking Cursor (att610).
             <del><i>Ps</i> = 1 8  -&gt; Print form feed (DECPFF).</del>
             <del><i>Ps</i> = 1 9  -&gt; Set print extent to full screen (DECPEX).</del>
             <i>Ps</i> = 2 5  -&gt; Show Cursor (DECTCEM).
@@ -693,7 +693,7 @@ CSI ? <i>Pm</i> h
             <del><i>Ps</i> = 4 2  -&gt; Enable National Replacement Character sets
           (DECNRCM).</del>
             <del><i>Ps</i> = 4 4  -&gt; Turn On Margin Bell.</del>
-            <del><i>Ps</i> = 4 5  -&gt; Reverse-wraparound Mode.</del>
+            <i>Ps</i> = 4 5  -&gt; Reverse-wraparound Mode.
             <del><i>Ps</i> = 4 6  -&gt; Start Logging.  This is normally disabled by a
           compile-time option.</del>
             <i>Ps</i> = 4 7  -&gt; Use Alternate Screen Buffer.  <del>(This may be dis-
@@ -751,15 +751,15 @@ CSI ? <i>Pm</i> h
           0 4 7  and 1 0 4 8  modes.  Use this with terminfo-based
           applications rather than the 4 7  mode.
 <ins block>ESP8266 doesn't have enough RAM to hold two screen buffers.
-          Instead, we at least back up and restore screen title, size and other
-          attributes. The screen is also cleared with each buffer change. <b>TODO implement</b></ins><!--
+          Instead, we at least back up and restore the cursor, screen title, size, buttons and other
+          attributes. The screen is also cleared with each buffer change.</ins><!--
 -->            <del><i>Ps</i> = 1 0 5 0  -&gt; Set terminfo/termcap function-key mode.
             <i>Ps</i> = 1 0 5 1  -&gt; Set Sun function-key mode.
             <i>Ps</i> = 1 0 5 2  -&gt; Set HP function-key mode.
             <i>Ps</i> = 1 0 5 3  -&gt; Set SCO function-key mode.
             <i>Ps</i> = 1 0 6 0  -&gt; Set legacy keyboard emulation (X11R6).
-            <i>Ps</i> = 1 0 6 1  -&gt; Set VT220 keyboard emulation.
-            <i>Ps</i> = 2 0 0 4  -&gt; Set bracketed paste mode.</del>
+            <i>Ps</i> = 1 0 6 1  -&gt; Set VT220 keyboard emulation.</del>
+            <i>Ps</i> = 2 0 0 4  -&gt; Set bracketed paste mode.
 <del>CSI <i>Pm</i> i  Media Copy (MC).
             <i>Ps</i> = 0  -&gt; Print screen (default).
             <i>Ps</i> = 4  -&gt; Turn off printer controller mode.
@@ -869,7 +869,7 @@ CSI <i>Pm</i> m  Character Attributes (SGR).
             <i>Ps</i> = 4  -&gt; Underlined.
             <i>Ps</i> = 5  -&gt; Blink <span>(appears as Bold).</span>
             <i>Ps</i> = 7  -&gt; Inverse.
-            <del><i>Ps</i> = 8  -&gt; Invisible, i.e., hidden (VT300).</del>
+            <i>Ps</i> = 8  -&gt; Invisible, i.e., hidden (VT300).
             <i>Ps</i> = 9  -&gt; Crossed-out characters (ISO 6429).
             <ins><i>Ps</i> = 2 0  -&gt; Fraktur (code from Wikipedia)</ins>
             <del><i>Ps</i> = 2 1  -&gt; Doubly-underlined (ISO 6429).</del>
@@ -879,7 +879,7 @@ CSI <i>Pm</i> m  Character Attributes (SGR).
             <i>Ps</i> = 2 4  -&gt; Not underlined.
             <i>Ps</i> = 2 5  -&gt; Steady (not blinking).
             <i>Ps</i> = 2 7  -&gt; Positive (not inverse).
-            <del><i>Ps</i> = 2 8  -&gt; Visible, i.e., not hidden (VT300).</del>
+            <i>Ps</i> = 2 8  -&gt; Visible, i.e., not hidden (VT300).
             <i>Ps</i> = 2 9  -&gt; Not crossed-out (ISO 6429).
             <i>Ps</i> = 3 0  -&gt; Set foreground color to Black.
             <i>Ps</i> = 3 1  -&gt; Set foreground color to Red.
@@ -925,24 +925,23 @@ CSI <i>Pm</i> m  Character Attributes (SGR).
           <del>If <i>xterm</i> is compiled with the 16-color support disabled, it
           supports the following, from <i>rxvt</i>:
             <i>Ps</i> = 1 0 0  -&gt; Set foreground and background color to
-          default.
-
-          <i>Xterm</i> maintains a color palette whose entries are identified
+          default.</del><ins block>ESPTerm implements a standard 256-color palette which can be accessed using the following three-part SGR:</ins><!--
+-->          <i>Xterm</i> maintains a color palette whose entries are identified
           by an index beginning with zero.  If 88- or 256-color support
           is compiled, the following apply:
           <b>o</b> All parameters are decimal integers.
           <b>o</b> RGB values range from zero (0) to 255.
-          <b>o</b> ISO-8613-3 can be interpreted in more than one way; <i>xterm</i>
+          <del><b>o</b> ISO-8613-3 can be interpreted in more than one way; <i>xterm</i>
             allows the semicolons in this control to be replaced by
             colons (but after the first colon, colons must be used).
 
-          These ISO-8613-3 controls are supported:
+          </del>These ISO-8613-3 controls are supported:<del>
             <i>Pm</i> = 3 8 ; 2 ; <i>Pr</i>; <i>Pg</i>; <i>Pb</i> -&gt; Set foreground color to the
-          closest match in <i>xterm</i>'s palette for the given RGB <i>Pr</i>/<i>Pg</i>/<i>Pb</i>.
-            <i>Pm</i> = 3 8 ; 5 ; <i>Ps</i> -&gt; Set foreground color to <i>Ps</i>.
+          closest match in <i>xterm</i>'s palette for the given RGB <i>Pr</i>/<i>Pg</i>/<i>Pb</i>.</del>
+            </del><i>Pm</i> = 3 8 ; 5 ; <i>Ps</i> -&gt; Set foreground color to <i>Ps</i>.<del>
             <i>Pm</i> = 4 8 ; 2 ; <i>Pr</i>; <i>Pg</i>; <i>Pb</i> -&gt; Set background color to the
           closest match in <i>xterm</i>'s palette for the given RGB <i>Pr</i>/<i>Pg</i>/<i>Pb</i>.
-            <i>Pm</i> = 4 8 ; 5 ; <i>Ps</i> -&gt; Set background color to <i>Ps</i>.</del>
+            </del><i>Pm</i> = 4 8 ; 5 ; <i>Ps</i> -&gt; Set background color to <i>Ps</i>.
 
 <del>CSI &gt; <i>Ps</i>; <i>Ps</i> m
           Set or reset resource-values used by <i>xterm</i> to decide whether
@@ -1064,7 +1063,7 @@ CSI ! p   Soft terminal reset (DECSTR).
             <i>Ps</i> = 2  1  -&gt; Extinguish Num Lock.
             <i>Ps</i> = 2  2  -&gt; Extinguish Caps Lock.
             <i>Ps</i> = 2  3  -&gt; Extinguish Scroll Lock.</del>
-<del>CSI <i>Ps</i> SP q
+CSI <i>Ps</i> SP q
           Set cursor style (DECSCUSR, VT520).
             <i>Ps</i> = 0  -&gt; blinking block.
             <i>Ps</i> = 1  -&gt; blinking block (default).
@@ -1072,7 +1071,7 @@ CSI ! p   Soft terminal reset (DECSTR).
             <i>Ps</i> = 3  -&gt; blinking underline.
             <i>Ps</i> = 4  -&gt; steady underline.
             <i>Ps</i> = 5  -&gt; blinking bar (xterm).
-            <i>Ps</i> = 6  -&gt; steady bar (xterm).</del>
+            <i>Ps</i> = 6  -&gt; steady bar (xterm).
 <del>CSI <i>Ps</i> " q
           Select character protection attribute (DECSCA).  Valid values
           for the parameter:
@@ -1084,7 +1083,7 @@ CSI <i>Ps</i> ; <i>Ps</i> r
           dow) (DECSTBM).
 CSI ? <i>Pm</i> r
           Restore DEC Private Mode Values.  The value of <i>Ps</i> previously
-          saved is restored.  <i>Ps</i> values are the same as for DECSET. <ins><b>TODO</b> implement</ins>
+          saved is restored.  <i>Ps</i> values are the same as for DECSET.
 <del>CSI <i>Pt</i>; <i>Pl</i>; <i>Pb</i>; <i>Pr</i>; <i>Ps</i>$ r
           Change Attributes in Rectangular Area (DECCARA), VT400 and up.
             <i>Pt</i>; <i>Pl</i>; <i>Pb</i>; <i>Pr</i> denotes the rectangle.
@@ -1096,7 +1095,7 @@ CSI s     Save cursor (ANSI.SYS), <del>available only when DECLRMM is dis-
           DECLRMM is enabled (VT420 and up).</del>
 CSI ? <i>Pm</i> s
           Save DEC Private Mode Values.  <i>Ps</i> values are the same as for
-          DECSET. <ins><b>TODO</b> implement</ins>
+          DECSET.
 CSI <i>Ps</i> ; <i>Ps</i> ; <i>Ps</i> t
           Window manipulation (from <i>dtterm</i>, as well as extensions).
           These controls may be disabled using the <i>allowWindowOps</i>
@@ -1833,7 +1832,7 @@ dent of the application that requests the switch.
 
 </pre>
 <h2><a name="h2-Bracketed-Paste-Mode" id="h2-Bracketed-Paste-Mode">Bracketed Paste Mode</a></h2>
-<pre><del>
+<pre>
 When bracketed paste mode is set, pasted text is bracketed with control
 sequences so that the program can differentiate pasted text from typed-
 in text.  When bracketed paste mode is set, the program will receive:
@@ -1841,7 +1840,7 @@ in text.  When bracketed paste mode is set, the program will receive:
 followed by the pasted text, followed by
    ESC [ 2 0 1 ~ .
 
-</del></pre>
+</pre>
 <h2><a name="h2-Title-Modes" id="h2-Title-Modes">Title Modes</a></h2>
 <pre><del>
 The window- and icon-labels can be set or queried using control
@@ -2234,9 +2233,9 @@ ESC Z     Identify.
 <li><a href="#h2-VT52-Style-Function-Keys"><del>VT52-Style Function Keys</del></a></li>
 <li><a href="#h2-Sun-Style-Function-Keys"><del>Sun-Style Function Keys</del></a></li>
 <li><a href="#h2-HP-Style-Function-Keys"><del>HP-Style Function Keys</del></a></li>
-<li><a href="#h2-The-Alternate-Screen-Buffer"><del>The Alternate Screen Buffer</del></a></li>
-<li><a href="#h2-Bracketed-Paste-Mode"><del>Bracketed Paste Mode</del></a></li>
-<li><a href="#h2-Title-Modes">Title Modes</a></li>
+<li><a href="#h2-The-Alternate-Screen-Buffer">The Alternate Screen Buffer</a></li>
+<li><a href="#h2-Bracketed-Paste-Mode">Bracketed Paste Mode</a></li>
+<li><a href="#h2-Title-Modes"><del>Title Modes</del></a></li>
 <li><a href="#h2-Mouse-Tracking">Mouse Tracking</a></li>
 <li><a href="#h2-X10-compatbility-mode">X10 compatbility mode</a></li>
 <li><a href="#h2-Normal-tracking-mode">Normal tracking mode</a></li>
