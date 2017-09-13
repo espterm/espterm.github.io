@@ -5,12 +5,12 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<title>Quick Reference :: ESPTerm</title>
-	<link href="/css/app.css" rel="stylesheet">
-	<script src="/js/app.js"></script>
+	<link href="/css/app.d7551c3.css" rel="stylesheet">
+	<script src="/js/app.d7551c3.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
-					</script>
+			</script>
 </head>
 <body class="cfg page-help">
 <div id="outer">
@@ -33,7 +33,11 @@
 </div>
 
 <div class="Box">
-	<a href="#" onclick="hpfold(1);return false">Expand all</a>&nbsp;|&nbsp;<a href="#" onclick="hpfold(0);return false">Collapse all</a>
+	<div noprint><a href="#" onclick="hpfold(1);return false">Expand all</a>&nbsp;|&nbsp;<a href="#" onclick="hpfold(0);return false">Collapse all</a><br>
+	<span class="smallpad"></span>
+	</div>
+	<i>Note: This list of commands is not exhaustive.<br>There's a more detailed and technical
+	<a href="https://espterm.github.io/docs/espterm-xterm.html">document</a> available online.</i>
 </div>
 
 <div class="Box fold">
@@ -159,7 +163,8 @@
 
 	<div class="Row v">
 		<p>
-			The initial screen size, title text and button labels can be configured in <a href="cfg_term.html">Terminal Settings</a>.
+			The initial screen size, title text and button labels can be configured
+			in <a href="cfg_term.html">Terminal Settings</a>.
 		</p>
 
 		<p>
@@ -168,6 +173,18 @@
 			update can be sent. Those delays are used is to avoid burdening the server with tiny updates during a large screen
 			repaint. If you experience issues (broken image due to dropped bytes), try adjusting those config options. It may also
 			be useful to try different baud rates.
+		</p>
+
+		<h3>UTF-8 support</h3>
+
+		<p>
+			ESPTerm supports all UTF-8 characters, but to reduce the screen buffer RAM size,
+			only a small amount of unique multi-byte characters can be used at the same time
+			(up to 160, depending on compile flags). Unique multi-byte characters are stored in a
+			look-up table and are removed when they are no longer used on the screen. In
+			rare cases it can happen that a character stays in the table after no longer
+			being used (this can be noticed when the table fills up and new characters
+			are not shown correctly). This is fixed by clearing the screen (<code>\e[2J</code> or <code>\ec</code>).
 		</p>
 	</div>
 </div>
@@ -503,7 +520,7 @@
 
 	<div class="Row v">
 		<p>
-			All text attributes are set using SGR commands like <code>\e[10;20;30m</code>, with up to 10 numbers separated by semicolons.
+			All text attributes are set using SGR commands like <code>\e[1;4m</code>, with up to 10 numbers separated by semicolons.
 			To restore all attributes to their default states, use SGR 0: <code>\e[0m</code> or <code>\e[m</code>.
 		</p>
 
@@ -516,28 +533,42 @@
 			<tr><td style="opacity:.6">Faint</td><td>2</td><td>22</td></tr>
 			<tr><td><i>Italic</i></td><td>3</td><td>23</td></tr>
 			<tr><td><u>Underlined</u></td><td>4</td><td>24</td></tr>
-			<tr><td>Blink</td><td>5</td><td>25</td></tr>
-			<tr><td><span style="color:black;background:#ccc;">Inverse</span></td><td>7</td><td>27</td></tr>
 			<tr><td><s>Striked</s></td><td>9</td><td>29</td></tr>
+			<tr><td style="text-decoration: overline;">Overline</td><td>53</td><td>55</td></tr>
+			<tr><td><span id="blinkdemo">Blink</span></td><td>5</td><td>25</td></tr>
+			<tr><td><span style="color:black;background:#ccc;">Inverse</span></td><td>7</td><td>27</td></tr>
 			<tr><td>𝔉𝔯𝔞𝔨𝔱𝔲𝔯</td><td>20</td><td>23</td></tr>
+			<tr><td>Conceal<sup>1</sup></td><td>8</td><td>28</td></tr>
 			</tbody>
 		</table>
+		<p><sup>1</sup>Conceal turns all characters invisible.</p>
 	</div>
 </div>
 
+<script>
+	setInterval(function() {
+	  qs('#blinkdemo').className='';
+      setTimeout(function() {
+        qs('#blinkdemo').className='invisible';
+      }, 750);
+	}, 1000);
+</script>
 
-<div class="Box fold theme-0">
+
+<div class="Box fold theme-1">
 	<h2>Commands: Color SGR</h2>
 
 	<div class="Row v">
 		<p>
-			Colors are set using SGR commands (like <code>\e[10;20;30m</code>). The following tables list the SGR codes to use.
-			Selected colors are used for any new text entered, as well as for empty space when using line and screen clearing commands.
-			The configured default colors can be restored using SGR 39 for foreground and SGR 49 for background.
+			Colors are set using SGR commands (like <code>\e[30;47m</code>). The following tables list the SGR
+			codes to use. Selected colors are used for any new text entered, as well as for empty
+			space when using clearing commands (except screen reset <code>\ec</code>, which first clears all
+			style attriutes. The configured default colors can be restored using <code>SGR 39</code> for
+			foreground and <code>SGR 49</code> for background.
 		</p>
 
 		<p>
-			The actual color representation depends on a color theme which
+			The actual color representation of the basic 16 colors depends on a color theme which
 			can be selected in <a href="cfg_term.html">Terminal Settings</a>.
 		</p>
 
@@ -588,6 +619,20 @@
 			<span class="bg14 fg0">106</span>
 			<span class="bg15 fg0">107</span>
 		</div>
+
+		<h3>256-color palette</h3>
+
+		<p>
+			ESPTerm supports in total 256 standard colors. The dark and bright basic colors are
+			numbered 0-7 and 8-15. To use colors higher than 15 (or 0-15 using this simpler numbering),
+			send <code>CSI 38 ; 5 ; <i>n</i> m</code>, where <code>n</code> is the color to set. Use 48 for background colors.
+		</p>
+
+		<p>
+			For a fererence of all 256 shades please refer to
+			<a href="https://jonasjacek.github.io/colors/">jonasjacek.github.io/colors</a>
+			or look it up elsewhere.
+		</p>
 	</div>
 </div>
 
@@ -766,10 +811,26 @@
 			<tr>
 				<td>
 					<code>
+						\e[?12h<br>\e[?12l
+					</code>
+				</td>
+				<td>Toggle cursor blinking (<code>h</code> on, <code>l</code> off)</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
 						\e[?25h<br>\e[?25l
 					</code>
 				</td>
 				<td>Show (<code>h</code>) or hide (<code>l</code>) the cursor</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[?45h<br>\e[?45l
+					</code>
+				</td>
+				<td>Enable (<code>h</code>) or disable (<code>l</code>) reverse wrap-around (when using "move left" or backspace)</td>
 			</tr>
 			</tbody>
 		</table>
@@ -810,6 +871,13 @@
 					<code>\e[<i>n</i>X</code></td>
 				<td>
 					Erase <i>n</i> characters in line.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>\e[<i>n</i>b</code></td>
+				<td>
+					Repeat last printed characters <i>n</i> times (moving cursor and using the current style).
 				</td>
 			</tr>
 			<tr>
@@ -859,6 +927,10 @@
 				</td>
 			</tr>
 			<tr>
+				<td><code>\e[8;<i>r</i>;<i>c</i>t</code></td>
+				<td>Set screen size to <i>r</i> rows and <i>c</i> columns (this is a command borrowed from Xterm)</td>
+			</tr>
+			<tr>
 				<td><code>\e[5n</code></td>
 				<td>
 					Query device status, ESPTerm replies with <code>\e[0n</code> "device is OK".
@@ -874,29 +946,62 @@
 				</td>
 			</tr>
 			<tr>
+				<td><code>\e[<i>n</i> q</code></td>
+				<td>
+					Set cursor style: eg. <code>\e[3 q</code> (the space is part of the command!).
+					0&nbsp;-&nbsp;block&nbsp;(blink), 1&nbsp;-&nbsp;default, 2&nbsp;-&nbsp;block&nbsp;(steady), 3&nbsp;-&nbsp;underline&nbsp;(blink),
+					4&nbsp;-&nbsp;underline&nbsp;(steady), 5&nbsp;-&nbsp;I-bar&nbsp;(blink), 6&nbsp;-&nbsp;I-bar&nbsp;(steady). The default style (number 1)
+					can be configured in Terminal Settings
+				</td>
+			</tr>
+			<tr>
 				<td><code>\e]0;<i>t</i>\a</code></td>
 				<td>Set screen title to <i>t</i> (this is a standard OSC command)</td>
 			</tr>
 			<tr>
 				<td>
 					<code>
-						\e]<i>80+n</i>;<i>t</i>\a
+						\e]<i>8x</i>;<i>t</i>\a
 					</code>
 				</td>
 				<td>
-					Set label for button <i>n</i> = 1-5 (code 81-85) to <i>t</i> - e.g.<code>\e]81;Yes\a</code>
+					Set label for button 1-5 (code 81-85) to <i>t</i> - e.g.<code>\e]81;Yes\a</code>
 					sets the first button text to "Yes".
 				</td>
 			</tr>
 			<tr>
 				<td>
 					<code>
-						\e]<i>90+n</i>;<i>m</i>\a
+						\e]<i>9x</i>;<i>m</i>\a
 					</code>
 				</td>
 				<td>
-					Set message for button <i>n</i> = 1-5 (code 81-85) to <i>m</i> - e.g.<code>\e]94;iv\a</code>
-					sets the 3rd button to send string "iv" when pressed.
+					Set message for button 1-5 (code 91-95) to <i>m</i> - e.g.<code>\e]94;<b>\a</code>
+					sets the 3rd button to send "</b>" when pressed. The message can be up to
+					10 bytes long.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e]9;<i>t</i>\a
+					</code>
+				</td>
+				<td>
+					Show a notification with text <i>t</i>. This will be either a desktop notification
+					or a pop-up balloon.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[?<i>n</i>s<br>\e[?<i>n</i>r
+					</code>
+				</td>
+				<td>
+					Save (<code>s</code>) and restore (<code>r</code>) any option set using <code>CSI ? <i>n</i> h</code>.
+					This is used by some applications to back up the original state before
+					making changes.
 				</td>
 			</tr>
 			<tr>
@@ -906,7 +1011,7 @@
 					</code>
 				</td>
 				<td>
-					Show (<code>h</code>) or hide (<code>l</code>) action buttons (the blue buttons under the screen).
+					Show (<code>h</code>) or hide (<code>l</code>) the action buttons (the blue buttons under the screen).
 				</td>
 			</tr>
 			<tr>
@@ -922,6 +1027,31 @@
 			<tr>
 				<td>
 					<code>
+						\e[?2004h<br>\e[?2004l
+					</code>
+				</td>
+				<td>
+					Enable (<code>h</code>) or disable (<code>l</code>) Bracketed Paste mode.
+					This mode makes any text sent using the Upload Tool be preceded by <code>\e[200~</code>
+					and terminated by <code>\e[201~</code>. This is useful for distinguishing keyboard input
+					from uploads.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
+						\e[?1049h<br>\e[?1049l
+					</code>
+				</td>
+				<td>
+					Switch to (<code>h</code>) or from (<code>l</code>) an alternate screen.
+					ESPTerm can't implement this fully, so the original screen content is not saved,
+					but it will remember the cursor, screen size, terminal title, button labels and messages.
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<code>
 						\e[12h<br>\e[12l
 					</code>
 				</td>
@@ -929,10 +1059,6 @@
 					Enable (<code>h</code>) or disable (<code>l</code>) Send-Receive Mode (SRM).
 					SRM is the opposite of Local Echo, meaning <code>\e[12h</code> disables and <code>\e[12l</code> enables Local Echo.
 				</td>
-			</tr>
-			<tr>
-				<td><code>\e[8;<i>r</i>;<i>c</i>t</code></td>
-				<td>Set screen size to <i>r</i> rows and <i>c</i> columns (this is a command borrowed from Xterm)</td>
 			</tr>
 			</tbody>
 		</table>
