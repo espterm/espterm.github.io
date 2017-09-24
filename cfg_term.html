@@ -3,10 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>Terminal Settings :: ESPTerm</title>
-	<link href="/css/app.6241b01.css" rel="stylesheet">
-	<script src="/js/app.6241b01.js"></script>
+	<link href="/css/app.310033b.css" rel="stylesheet">
+	<script src="/js/app.310033b.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -18,11 +18,6 @@
 	<div id="brand" tabindex=0>ESPTerm<sup> DEMO</sup></div>
 	<a href="term.html" class="icn-back">Back to Terminal</a>
 	<a href="cfg_term.html" class="icn-terminal selected">Terminal Settings</a><a href="cfg_wifi.html" class="icn-wifi ">WiFi Settings</a><a href="cfg_network.html" class="icn-network ">Network Settings</a><a href="cfg_system.html" class="icn-configure ">System Settings</a><a href="help.html" class="icn-help ">Quick Reference</a><a href="about.html" class="icn-about ">About ESPTerm</a></nav>
-
-<script>
-	function menuOpen() { $('#menu').toggleClass('expanded') }
-	$('#brand').on('click', menuOpen).on('keypress', cr(menuOpen));
-</script>
 
 <div id="content">
 <img src="/img/loader.gif" alt="Loading…" id="loader">
@@ -36,7 +31,7 @@
 	<a href="reset_screen.html">Reset screen & parser</a>
 </div>
 
-<form class="Box mobopen str" action="term_set.html" method="GET" id='form-1'>
+<form class="Box mobopen str" action="term_set.html" method="GET" id='form-initial'>
 	<h2>Initial Settings</h2>
 
 	<div class="Row explain">
@@ -50,63 +45,66 @@
 		<label for="theme">Color scheme</label>
 		<select name="theme" id="theme" class="short" onchange="showColor()">
 			<option value="0">Tango</option>
-			<option value="1">Linux</option>
+			<option value="1">Linux (CGA)</option>
 			<option value="2">XTerm</option>
 			<option value="3">Rxvt</option>
 			<option value="4">Ambience</option>
 			<option value="5">Solarized</option>
+			<option value="6">CGA NTSC</option>
+			<option value="7">ZX Spectrum</option>
+			<option value="8">Apple II</option>
+			<option value="9">Commodore</option>
 		</select>
 	</div>
 
 	<div class="Row color-preview">
 		<div class="colorprev">
-			<span data-fg=0 class="bg0 fg0">30</span><!--
-			--><span data-fg=1 class="bg0 fg1">31</span><!--
-			--><span data-fg=2 class="bg0 fg2">32</span><!--
-			--><span data-fg=3 class="bg0 fg3">33</span><!--
-			--><span data-fg=4 class="bg0 fg4">34</span><!--
-			--><span data-fg=5 class="bg0 fg5">35</span><!--
-			--><span data-fg=6 class="bg0 fg6">36</span><!--
-			--><span data-fg=7 class="bg0 fg7">37</span>
+			<span data-fg=0 data-bg="0" style="text-shadow: 0 0 4px white;">30</span><!--
+			--><span data-fg=1 data-bg="0">31</span><!--
+			--><span data-fg=2 data-bg="0">32</span><!--
+			--><span data-fg=3 data-bg="0">33</span><!--
+			--><span data-fg=4 data-bg="0">34</span><!--
+			--><span data-fg=5 data-bg="0">35</span><!--
+			--><span data-fg=6 data-bg="0">36</span><!--
+			--><span data-fg=7 data-bg="0">37</span>
 		</div>
 
 		<div class="colorprev">
-			<span data-fg=8 class="bg0 fg8">90</span><!--
-			--><span data-fg=9 class="bg0 fg9">91</span><!--
-			--><span data-fg=10 class="bg0 fg10">92</span><!--
-			--><span data-fg=11 class="bg0 fg11">93</span><!--
-			--><span data-fg=12 class="bg0 fg12">94</span><!--
-			--><span data-fg=13 class="bg0 fg13">95</span><!--
-			--><span data-fg=14 class="bg0 fg14">96</span><!--
-			--><span data-fg=15 class="bg0 fg15">97</span>
+			<span data-fg=8 data-bg="0">90</span><!--
+			--><span data-fg=9 data-bg="0">91</span><!--
+			--><span data-fg=10 data-bg="0">92</span><!--
+			--><span data-fg=11 data-bg="0">93</span><!--
+			--><span data-fg=12 data-bg="0">94</span><!--
+			--><span data-fg=13 data-bg="0">95</span><!--
+			--><span data-fg=14 data-bg="0">96</span><!--
+			--><span data-fg=15 data-bg="0">97</span>
 		</div>
 
 		<div class="colorprev">
-			<span data-bg=0 class="bg0 fg15">40</span><!--
-			--><span data-bg=1 class="bg1 fg15">41</span><!--
-			--><span data-bg=2 class="bg2 fg15">42</span><!--
-			--><span data-bg=3 class="bg3 fg0">43</span><!--
-			--><span data-bg=4 class="bg4 fg15">44</span><!--
-			--><span data-bg=5 class="bg5 fg15">45</span><!--
-			--><span data-bg=6 class="bg6 fg15">46</span><!--
-			--><span data-bg=7 class="bg7 fg0">47</span>
+			<span data-bg=0 data-fg="15">40</span><!--
+			--><span data-bg=1 data-fg="15">41</span><!--
+			--><span data-bg=2 data-fg="15">42</span><!--
+			--><span data-bg=3 data-fg="0">43</span><!--
+			--><span data-bg=4 data-fg="15">44</span><!--
+			--><span data-bg=5 data-fg="15">45</span><!--
+			--><span data-bg=6 data-fg="15">46</span><!--
+			--><span data-bg=7 data-fg="0">47</span>
 		</div>
 
 		<div class="colorprev">
-			<span data-bg=8 class="bg8 fg15">100</span><!--
-			--><span data-bg=9 class="bg9 fg0">101</span><!--
-			--><span data-bg=10 class="bg10 fg0">102</span><!--
-			--><span data-bg=11 class="bg11 fg0">103</span><!--
-			--><span data-bg=12 class="bg12 fg0">104</span><!--
-			--><span data-bg=13 class="bg13 fg0">105</span><!--
-			--><span data-bg=14 class="bg14 fg0">106</span><!--
-			--><span data-bg=15 class="bg15 fg0">107</span>
+			<span data-bg=8 data-fg="15">100</span><!--
+			--><span data-bg=9 data-fg="0">101</span><!--
+			--><span data-bg=10 data-fg="0">102</span><!--
+			--><span data-bg=11 data-fg="0">103</span><!--
+			--><span data-bg=12 data-fg="0">104</span><!--
+			--><span data-bg=13 data-fg="0">105</span><!--
+			--><span data-bg=14 data-fg="0">106</span><!--
+			--><span data-bg=15 data-fg="0">107</span>
 		</div>
 	</div>
 
 	<div class="Row color-preview">
-		<div style="
-		" id="color-example">
+		<div id="color-example" data-fg="" data-bg="">
 			Default colors preview		</div>
 	</div>
 
@@ -131,22 +129,22 @@
 						<option value="15">White</option>
 					</select>&nbsp;<!--
 		--><select name="default_bg" id="default_bg" class="short" onchange="showColor()">
-							<option value="0">Black</option>
-							<option value="1">Red</option>
-							<option value="2">Green</option>
-							<option value="3">Yellow</option>
-							<option value="4">Blue</option>
-							<option value="5">Purple</option>
-							<option value="6">Cyan</option>
-							<option value="7">Silver</option>
-							<option value="8">Gray</option>
-							<option value="9">Light Red</option>
-							<option value="10">Light Green</option>
-							<option value="11">Light Yellow</option>
-							<option value="12">Light Blue</option>
-							<option value="13">Light Purple</option>
-							<option value="14">Light Cyan</option>
-							<option value="15">White</option>
+						<option value="0">Black</option>
+						<option value="1">Red</option>
+						<option value="2">Green</option>
+						<option value="3">Yellow</option>
+						<option value="4">Blue</option>
+						<option value="5">Purple</option>
+						<option value="6">Cyan</option>
+						<option value="7">Silver</option>
+						<option value="8">Gray</option>
+						<option value="9">Light Red</option>
+						<option value="10">Light Green</option>
+						<option value="11">Light Yellow</option>
+						<option value="12">Light Blue</option>
+						<option value="13">Light Purple</option>
+						<option value="14">Light Cyan</option>
+						<option value="15">White</option>
 					</select>
 	</div>
 
@@ -159,6 +157,12 @@
 	<div class="Row">
 		<label for="term_title">Header text</label>
 		<input type="text" name="term_title" id="term_title" value="ESPTerm Web UI Demo" required>
+	</div>
+
+	<div class="Row checkbox" >
+		<label>Show buttons</label><!--
+		--><span class="box" tabindex=0 role=checkbox></span>
+		<input type="hidden" id="show_buttons" name="show_buttons" value="1">
 	</div>
 
 	<div class="Row">
@@ -183,11 +187,66 @@
 	</div>
 
 	<div class="Row buttons">
-		<a class="button icn-ok" href="#" onclick="qs('#form-1').submit()">Apply!</a>
+		<a class="button icn-ok" href="#" onclick="qs('#form-initial').submit()">Apply!</a>
 	</div>
 </form>
 
-<form class="Box fold str" action="term_set.html" method="GET" id='form-2'>
+<form class="Box fold str" action="term_set.html" method="GET" id="form-uart">
+	<h2 tabindex=0>Serial Port</h2>
+
+	<div class="Row explain">
+		
+		This form controls the primary, communication UART. The debug UART is fixed 
+		at 115.200 baud, one stop-bit and no parity.
+			</div>
+
+	<div class="Row">
+		<label for="uart_baud">Baud rate<span class="mq-phone">&nbsp;(bps)</span></label>
+		<select name="uart_baud" id="uart_baud" class="short">
+			<option value="300">300</option>
+			<option value="600">600</option>
+			<option value="1200">1.200</option>
+			<option value="2400">2.400</option>
+			<option value="4800">4.800</option>
+			<option value="9600">9.600</option>
+			<option value="19200">19.200</option>
+			<option value="38400">38.400</option>
+			<option value="57600">57.600</option>
+			<option value="74880">74.880</option>
+			<option value="115200">115.200</option>
+			<option value="230400">230.400</option>
+			<option value="460800">460.800</option>
+			<option value="921600">921.600</option>
+			<option value="1843200">1.843.200</option>
+			<option value="3686400">3.686.400</option>
+					</select>
+		<span class="mq-no-phone">&nbsp;bps</span>
+	</div>
+
+	<div class="Row">
+		<label for="uart_parity">Parity</label>
+		<select name="uart_parity" id="uart_parity" class="short">
+			<option value="2">None</option>
+			<option value="1">Odd</option>
+			<option value="0">Even</option>
+					</select>
+	</div>
+
+	<div class="Row">
+		<label for="uart_stopbits">Stop-bits</label>
+		<select name="uart_stopbits" id="uart_stopbits" class="short">
+			<option value="1">One</option>
+			<option value="2">One and half</option>
+			<option value="3">Two</option>
+					</select>
+	</div>
+
+	<div class="Row buttons">
+		<a class="button icn-ok" href="#" onclick="qs('#form-uart').submit()">Apply!</a>
+	</div>
+</form>
+
+<form class="Box fold str" action="term_set.html" method="GET" id='form-expert'>
 	<h2>Expert Options</h2>
 
 	<div class="Row explain">
@@ -241,12 +300,6 @@
 	</div>
 
 	<div class="Row checkbox" >
-		<label>Show buttons</label><!--
-		--><span class="box" tabindex=0 role=checkbox></span>
-		<input type="hidden" id="show_buttons" name="show_buttons" value="1">
-	</div>
-
-	<div class="Row checkbox" >
 		<label>Show nav links</label><!--
 		--><span class="box" tabindex=0 role=checkbox></span>
 		<input type="hidden" id="show_config_links" name="show_config_links" value="1">
@@ -259,7 +312,7 @@
 	</div>
 
 	<div class="Row buttons">
-		<a class="button icn-ok" href="#" onclick="qs('#form-2').submit()">Apply!</a>
+		<a class="button icn-ok" href="#" onclick="qs('#form-expert').submit()">Apply!</a>
 	</div>
 </form>
 
@@ -269,15 +322,15 @@
 	$('#cursor_shape').val();
 	$('#theme').val(0);
 
+    $('#uart_baud').val(115200);
+    $('#uart_parity').val(2);
+    $('#uart_stopbits').val(1);
+
 	function showColor() {
 		var ex = qs('#color-example');
-		ex.className = '';
-		ex.classList.add('fg'+$('#default_fg').val());
-		ex.classList.add('bg'+$('#default_bg').val());
-		var th = $('#theme').val();
-		$('.color-preview').forEach(function(e) {
-			e.className = 'Row color-preview theme-'+th;
-		});
+		ex.dataset.fg = +$('#default_fg').val();
+		ex.dataset.bg = +$('#default_bg').val();
+		themes.themePreview(+$('#theme').val())
 	}
 	showColor();
 

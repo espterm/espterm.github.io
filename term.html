@@ -3,10 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>Terminal :: ESPTerm</title>
-	<link href="/css/app.6241b01.css" rel="stylesheet">
-	<script src="/js/app.6241b01.js"></script>
+	<link href="/css/app.310033b.css" rel="stylesheet">
+	<script src="/js/app.310033b.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -20,9 +20,9 @@
 <script>
 	// Workaround for badly loaded page
 	setTimeout(function() {
-		if (typeof termInit == 'undefined' || typeof $ == 'undefined') {
-			console.error("Page load failed, refreshing…");
-			location.reload(true);
+		if (typeof termInit == 'undefined') {
+			console.error("Page load failed, refreshing…")
+			location.reload(true)
 		}
 	}, 3000);
 </script>
@@ -58,6 +58,7 @@
 </div>
 
 <h1 id="screen-title"><!-- Screen title is loaded here by JS --></h1>
+<a href="#" id="term-fit-screen" class="mq-tablet-max"><i id="resize-button-icon" class="icn-resize-small"></i></a>
 
 <div id="term-wrap">
 	<div id="screen">
@@ -77,8 +78,7 @@
 </div>
 
 <nav id="term-nav">
-	<a href="#" id="term-fit-screen" class="mq-tablet-max"><i id="resize-button-icon" class="icn-resize-small"></i></a><!--
-	--><a href="#" id="term-kb-open" class="mq-tablet-max"><i class="icn-keyboard"></i><span>Keyboard</span></a><!--
+	<a href="#" id="term-kb-open" class="mq-tablet-max"><i class="icn-keyboard"></i><span>Keyboard</span></a><!--
 	--><a href="#" id="term-fu-open"><i class="icn-download"></i><span>Upload</span></a><!--
 	--><a href="cfg_term.html" class="x-term-conf-btn"><i class="icn-configure"></i><span>Config</span></a><!--
 	--><a href="cfg_wifi.html" class="x-term-conf-btn"><i class="icn-wifi"></i><span>WiFi</span></a><!--
@@ -87,20 +87,22 @@
 </nav>
 
 <script>
-	try {
-		window.noAutoShow = true;
-		termInit({
-		  labels: 'TESPTerm Web UI Demo\u0001OK\u0001Cancel\u0001\u0001\u0001Help',
-		  theme: +'0',
-		  allFn: !!+'0',
-        });
-	} catch(e) {
-		console.error(e);
-				console.error("Fail, reloading in 3s…");
-		setTimeout(function() {
-			location.reload(true);
-		}, 3000);
-			}
+  try {
+    window.noAutoShow = true;
+    termInit({
+      labels: 'TESPTerm Web UI Demo\u0001OK\u0001Cancel\u0001\u0001\u0001Help',
+	  theme: +'0',
+      defaultFg: +'7',
+	  defaultBg: +'0',
+	  allFn: !!+'0',
+    });
+  } catch (e) {
+    console.error(e);
+	      console.error("Fail, reloading in 3s…");
+    setTimeout(function () {
+      location.reload(true);
+    }, 3000);
+	    }
 </script>
 
 <div class="botpad"></div>

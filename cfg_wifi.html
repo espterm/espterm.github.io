@@ -3,10 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>WiFi Settings :: ESPTerm</title>
-	<link href="/css/app.6241b01.css" rel="stylesheet">
-	<script src="/js/app.6241b01.js"></script>
+	<link href="/css/app.310033b.css" rel="stylesheet">
+	<script src="/js/app.310033b.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -19,11 +19,6 @@
 	<a href="term.html" class="icn-back">Back to Terminal</a>
 	<a href="cfg_term.html" class="icn-terminal ">Terminal Settings</a><a href="cfg_wifi.html" class="icn-wifi selected">WiFi Settings</a><a href="cfg_network.html" class="icn-network ">Network Settings</a><a href="cfg_system.html" class="icn-configure ">System Settings</a><a href="help.html" class="icn-help ">Quick Reference</a><a href="about.html" class="icn-about ">About ESPTerm</a></nav>
 
-<script>
-	function menuOpen() { $('#menu').toggleClass('expanded') }
-	$('#brand').on('click', menuOpen).on('keypress', cr(menuOpen));
-</script>
-
 <div id="content">
 <img src="/img/loader.gif" alt="Loading…" id="loader">
 <h1>WiFi Settings</h1>
@@ -32,7 +27,7 @@
 	<span class="lead">Validation errors for:</span>&nbsp;<span class="list"></span>
 </div>
 
-<form class="Box str mobcol" action="wifi_set.html" method="GET" id="form-1">
+<form class="Box str mobcol" action="wifi_set.html" method="GET" id="form-ap">
 	<h2 tabindex=0>Built-in Access Point</h2>
 
 	<div class="Row checkbox x-ap-toggle">
@@ -71,11 +66,11 @@
 	</div>
 
 	<div class="Row buttons">
-		<a class="button icn-ok" href="#" onclick="qs('#form-1').submit()">Apply!</a>
+		<a class="button icn-ok" href="#" onclick="qs('#form-ap').submit()">Apply!</a>
 	</div>
 </form>
 
-<form class="Box str mobcol expanded" action="wifi_set.html" method="GET" id="form-2">
+<form class="Box str mobcol expanded" action="wifi_set.html" method="GET" id="form-sta">
 	<h2 tabindex=0>Join Existing Network</h2>
 
 	<div class="Row checkbox x-sta-toggle">
@@ -116,7 +111,7 @@
 	</div>
 
 	<div class="Row buttons">
-		<a class="button icn-ok" href="#" onclick="qs('#form-2').submit()">Apply!</a>
+		<a class="button icn-ok" href="#" onclick="qs('#form-sta').submit()">Apply!</a>
 	</div>
 </form>
 

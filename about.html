@@ -3,10 +3,10 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>About ESPTerm :: ESPTerm</title>
-	<link href="/css/app.6241b01.css" rel="stylesheet">
-	<script src="/js/app.6241b01.js"></script>
+	<link href="/css/app.310033b.css" rel="stylesheet">
+	<script src="/js/app.310033b.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -18,11 +18,6 @@
 	<div id="brand" tabindex=0>ESPTerm<sup> DEMO</sup></div>
 	<a href="term.html" class="icn-back">Back to Terminal</a>
 	<a href="cfg_term.html" class="icn-terminal ">Terminal Settings</a><a href="cfg_wifi.html" class="icn-wifi ">WiFi Settings</a><a href="cfg_network.html" class="icn-network ">Network Settings</a><a href="cfg_system.html" class="icn-configure ">System Settings</a><a href="help.html" class="icn-help ">Quick Reference</a><a href="about.html" class="icn-about selected">About ESPTerm</a></nav>
-
-<script>
-	function menuOpen() { $('#menu').toggleClass('expanded') }
-	$('#brand').on('click', menuOpen).on('keypress', cr(menuOpen));
-</script>
 
 <div id="content">
 <img src="/img/loader.gif" alt="Loading…" id="loader">
@@ -55,12 +50,12 @@
 	<table>
 		<tr>
 			<th>ESPTerm</th>
-			<td>v1.1.2, built 2017-09-15 at&nbsp;8:54</td>
+			<td>v???, built 2017-09-24 at&nbsp;20:55 CEST</td>
 		</tr>
 		<tr>
 			<th>Git hash</th>
-			<td>back-end: <a href="https://github.com/espterm/espterm-firmware/commit/0012c92">0012c92</a>,
-				front-end: <a href="https://github.com/espterm/espterm-front-end/commit/6241b01">6241b01</td>
+			<td>back-end: <a href="https://github.com/espterm/espterm-firmware/commit/00000000">00000000</a>,
+				front-end: <a href="https://github.com/espterm/espterm-front-end/commit/310033b">310033b</td>
 		</tr>
 		<tr>
 			<th>libesphttpd</th>
@@ -77,7 +72,11 @@
 <div class="Box">
 	<h2>Issues</h2>
 	<p>
-		Please report any issues to the <a href="https://github.com/espterm/espterm-firmware/issues">bugtracker</a> or send them by e-mail (see above).
+		Please report any issues to our <a href="https://github.com/espterm/espterm-firmware/issues">bugtracker</a> or send them by e-mail.
+	</p>
+	<p>
+		ESPTerm has a <a href="https://groups.google.com/forum/#!forum/espterm-dev">mailing list</a> for
+		troubleshooting and release announcements.
 	</p>
 	<p>
 		Firmware updates can be downloaded from the <a href="https://github.com/espterm/espterm-firmware/releases">releases page</a> and flashed
@@ -99,14 +98,26 @@
 
 <div class="Box">
 	<h2>Thanks</h2>
-	<p>
-		The webserver is based on a <a href="https://github.com/MightyPork/libesphttpd">fork</a> of the
-		<a href="https://github.com/Spritetm/esphttpd">esphttpd</a> library by Jeroen Domburg (Sprite_tm).
-	</p>
-	<p>
-		Using (modified) JS library <a href="https://github.com/kylebarrow/chibi">chibi.js</a> by
-		Kyle Barrow as a lightweight jQuery alternative.
-	</p>
+	<p><i>…for making this project possible, in no particular order, go to:</i></p>
+	<ul style="padding-left: 20px">
+		<li>
+			<b>Jeroen "SpriteTM" Domburg,</b> for writing the <a href="https://github.com/Spritetm/esphttpd">esphttpd</a>
+			server library we use (as a <a href="https://github.com/MightyPork/libesphttpd">fork</a>)
+		</li>
+		<li>
+			<b>Kyle Barrow,</b> for writing the <a href="https://github.com/kylebarrow/chibi">chibi.js</a> library
+			we use instead of jQuery
+		</li>
+		<li>
+			<b>cpsdqs,</b> for rewriting the front-end to use HTML5 canvas and other JS improvements
+		</li>
+		<li>
+			<b>Guenter Honisch,</b> for finding bugs and suggesting many improvements
+		</li>
+		<li>
+			<b>doc. Jan Fischer,</b> who came up with the original idea
+		</li>
+	</ul>
 </div>
 
 <div class="botpad"></div>
