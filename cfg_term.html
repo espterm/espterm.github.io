@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>Terminal Settings :: ESPTerm</title>
-	<link href="/css/app.310033b.css" rel="stylesheet">
-	<script src="/js/app.310033b.js"></script>
+	<link href="/css/app.f5dd70a.css" rel="stylesheet">
+	<script src="/js/app.f5dd70a.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -27,22 +27,25 @@
 	<span class="lead">Validation errors for:</span>&nbsp;<span class="list"></span>
 </div>
 
+<div class="Box message hidden"></div>
+
 <div class="Box">
 	<a href="reset_screen.html">Reset screen & parser</a>
 </div>
 
-<form class="Box mobopen str" action="term_set.html" method="GET" id='form-initial'>
-	<h2>Initial Settings</h2>
+<!-- Theme -->
+<form class="Box mobcol str" action="term_set.html" method="GET" id='form-scheme'>
+	<h2>Color Scheme</h2>
 
 	<div class="Row explain">
 		
-		Those are the initial settings used after ESPTerm powers on or when the screen
-		reset command is received. Some options can be changed by the application via escape sequences, 
-		those changes won't be saved in Flash.
+		To select default text and background color, click on the
+		preview palette. Alternatively, use numbers 0-15 for theme colors, 16-255 for standard 
+		colors and hex (#FFFFFF) for True Color (24-bit).
 			</div>
 
 	<div class="Row">
-		<label for="theme">Color scheme</label>
+		<label for="theme">Color palette</label>
 		<select name="theme" id="theme" class="short" onchange="showColor()">
 			<option value="0">Tango</option>
 			<option value="1">Linux (CGA)</option>
@@ -58,120 +61,79 @@
 	</div>
 
 	<div class="Row color-preview">
-		<div class="colorprev">
-			<span data-fg=0 data-bg="0" style="text-shadow: 0 0 4px white;">30</span><!--
-			--><span data-fg=1 data-bg="0">31</span><!--
-			--><span data-fg=2 data-bg="0">32</span><!--
-			--><span data-fg=3 data-bg="0">33</span><!--
-			--><span data-fg=4 data-bg="0">34</span><!--
-			--><span data-fg=5 data-bg="0">35</span><!--
-			--><span data-fg=6 data-bg="0">36</span><!--
-			--><span data-fg=7 data-bg="0">37</span>
-		</div>
+		<label>Background</label>
+		<div>
+			<div class="colorprev bg">
+				<span data-bg=0 data-fg=15>0</span><!--
+				--><span data-bg=1 data-fg=15>1</span><!--
+				--><span data-bg=2 data-fg=15>2</span><!--
+				--><span data-bg=3 data-fg=0>3</span><!--
+				--><span data-bg=4 data-fg=15>4</span><!--
+				--><span data-bg=5 data-fg=15>5</span><!--
+				--><span data-bg=6 data-fg=15>6</span><!--
+				--><span data-bg=7 data-fg=0>7</span>
+			</div>
 
-		<div class="colorprev">
-			<span data-fg=8 data-bg="0">90</span><!--
-			--><span data-fg=9 data-bg="0">91</span><!--
-			--><span data-fg=10 data-bg="0">92</span><!--
-			--><span data-fg=11 data-bg="0">93</span><!--
-			--><span data-fg=12 data-bg="0">94</span><!--
-			--><span data-fg=13 data-bg="0">95</span><!--
-			--><span data-fg=14 data-bg="0">96</span><!--
-			--><span data-fg=15 data-bg="0">97</span>
-		</div>
-
-		<div class="colorprev">
-			<span data-bg=0 data-fg="15">40</span><!--
-			--><span data-bg=1 data-fg="15">41</span><!--
-			--><span data-bg=2 data-fg="15">42</span><!--
-			--><span data-bg=3 data-fg="0">43</span><!--
-			--><span data-bg=4 data-fg="15">44</span><!--
-			--><span data-bg=5 data-fg="15">45</span><!--
-			--><span data-bg=6 data-fg="15">46</span><!--
-			--><span data-bg=7 data-fg="0">47</span>
-		</div>
-
-		<div class="colorprev">
-			<span data-bg=8 data-fg="15">100</span><!--
-			--><span data-bg=9 data-fg="0">101</span><!--
-			--><span data-bg=10 data-fg="0">102</span><!--
-			--><span data-bg=11 data-fg="0">103</span><!--
-			--><span data-bg=12 data-fg="0">104</span><!--
-			--><span data-bg=13 data-fg="0">105</span><!--
-			--><span data-bg=14 data-fg="0">106</span><!--
-			--><span data-bg=15 data-fg="0">107</span>
+			<div class="colorprev bg">
+				<span data-bg=8 data-fg=15>8</span><!--
+				--><span data-bg=9 data-fg=0>9</span><!--
+				--><span data-bg=10 data-fg=0>10</span><!--
+				--><span data-bg=11 data-fg=0>11</span><!--
+				--><span data-bg=12 data-fg=0>12</span><!--
+				--><span data-bg=13 data-fg=0>13</span><!--
+				--><span data-bg=14 data-fg=0>14</span><!--
+				--><span data-bg=15 data-fg=0>15</span>
+			</div>
 		</div>
 	</div>
 
 	<div class="Row color-preview">
-		<div id="color-example" data-fg="" data-bg="">
+		<label>Foreground</label>
+		<div>
+			<div class="colorprev fg">
+				<span data-fg=0 data-bg=0 style="text-shadow: 0 0 4px white;">0</span><!--
+				--><span data-fg=1 data-bg=0>1</span><!--
+				--><span data-fg=2 data-bg=0>2</span><!--
+				--><span data-fg=3 data-bg=0>3</span><!--
+				--><span data-fg=4 data-bg=0>4</span><!--
+				--><span data-fg=5 data-bg=0>5</span><!--
+				--><span data-fg=6 data-bg=0>6</span><!--
+				--><span data-fg=7 data-bg=0>7</span>
+			</div>
+
+			<div class="colorprev fg">
+				<span data-fg=8 data-bg=0>8</span><!--
+				--><span data-fg=9 data-bg=0>9</span><!--
+				--><span data-fg=10 data-bg=0>10</span><!--
+				--><span data-fg=11 data-bg=0>11</span><!--
+				--><span data-fg=12 data-bg=0>12</span><!--
+				--><span data-fg=13 data-bg=0>13</span><!--
+				--><span data-fg=14 data-bg=0>14</span><!--
+				--><span data-fg=15 data-bg=0>15</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="Row color-preview">
+		<label>Defaults</label>
+		<div class="color-example" data-fg="" data-bg="">
 			Default colors preview		</div>
 	</div>
 
-	<div class="Row">
-		<label>Text / background</label>
-		<select name="default_fg" id="default_fg" class="short" onchange="showColor()">
-						<option value="0">Black</option>
-						<option value="1">Red</option>
-						<option value="2">Green</option>
-						<option value="3">Yellow</option>
-						<option value="4">Blue</option>
-						<option value="5">Purple</option>
-						<option value="6">Cyan</option>
-						<option value="7">Silver</option>
-						<option value="8">Gray</option>
-						<option value="9">Light Red</option>
-						<option value="10">Light Green</option>
-						<option value="11">Light Yellow</option>
-						<option value="12">Light Blue</option>
-						<option value="13">Light Purple</option>
-						<option value="14">Light Cyan</option>
-						<option value="15">White</option>
-					</select>&nbsp;<!--
-		--><select name="default_bg" id="default_bg" class="short" onchange="showColor()">
-						<option value="0">Black</option>
-						<option value="1">Red</option>
-						<option value="2">Green</option>
-						<option value="3">Yellow</option>
-						<option value="4">Blue</option>
-						<option value="5">Purple</option>
-						<option value="6">Cyan</option>
-						<option value="7">Silver</option>
-						<option value="8">Gray</option>
-						<option value="9">Light Red</option>
-						<option value="10">Light Green</option>
-						<option value="11">Light Yellow</option>
-						<option value="12">Light Blue</option>
-						<option value="13">Light Purple</option>
-						<option value="14">Light Cyan</option>
-						<option value="15">White</option>
-					</select>
+	<div class="Row color-preview">
+		<label>Presets</label>
+		<div id="fgbg_presets"></div>
 	</div>
 
 	<div class="Row">
-		<label for="term_width">Width / height</label>
-		<input type="number" step=1 min=1 max=255 name="term_width" id="term_width" value="80" required>&nbsp;<!--
-		--><input type="number" step=1 min=1 max=255 name="term_height" id="term_height" value="25" required>
-	</div>
-
-	<div class="Row">
-		<label for="term_title">Header text</label>
-		<input type="text" name="term_title" id="term_title" value="ESPTerm Web UI Demo" required>
-	</div>
-
-	<div class="Row checkbox" >
-		<label>Show buttons</label><!--
-		--><span class="box" tabindex=0 role=checkbox></span>
-		<input type="hidden" id="show_buttons" name="show_buttons" value="1">
-	</div>
-
-	<div class="Row">
-		<label>Button labels</label>
-		<input class="short" type="text" name="btn1" id="btn1" value="OK">&nbsp;
-		<input class="short" type="text" name="btn2" id="btn2" value="Cancel">&nbsp;
-		<input class="short" type="text" name="btn3" id="btn3" value="">&nbsp;
-		<input class="short" type="text" name="btn4" id="btn4" value="">&nbsp;
-		<input class="short" type="text" name="btn5" id="btn5" value="Help">
+		<div class="SubRow">
+			<label for="default_fg">Default fg.</label>
+			<input type="text" name="default_fg" id="default_fg" class="short" value="7">
+		</div>
+		<div class="SubRow">
+			<label for="default_bg">Default bg.</label>
+			<input type="text" name="default_bg" id="default_bg" class="short" value="0">
+		</div>
 	</div>
 
 	<div class="Row">
@@ -187,16 +149,85 @@
 	</div>
 
 	<div class="Row buttons">
+		<a class="button icn-ok" href="#" onclick="qs('#form-scheme').submit()">Apply!</a>
+	</div>
+</form>
+
+<!-- Initials -->
+<form class="Box mobcol str" action="term_set.html" method="GET" id='form-initial'>
+	<h2>Initial Settings</h2>
+
+	<div class="Row explain">
+		
+		Those are the initial settings used after ESPTerm powers on, or when the screen
+		reset command is received (<code>\ec</code>). They can be changed by the 
+		terminal application using escape sequences.
+			</div>
+
+	<div class="Row">
+		<div class="SubRow">
+			<label for="term_width">Width</label>
+			<input type="number" step=1 min=1 max=255 name="term_width" id="term_width" value="80" required>
+		</div>
+		<div class="SubRow">
+			<label for="term_height">Height</label>
+			<input type="number" step=1 min=1 max=255 name="term_height" id="term_height" value="25" required>
+		</div>
+	</div>
+
+	<div class="Row">
+		<label for="term_title">Header text</label>
+		<input type="text" name="term_title" id="term_title" value="ESPTerm Web UI Demo" required>
+	</div>
+
+	<div class="Row checkbox" >
+		<label>Show buttons</label><!--
+		--><span class="box" tabindex=0 role=checkbox></span>
+		<input type="hidden" id="show_buttons" name="show_buttons" value="1">
+	</div>
+
+	<div class="Row">
+		<label>Button labels</label>
+		<input class="tiny" type="text" name="btn1" id="btn1" value="OK">
+		<input class="tiny" type="text" name="btn2" id="btn2" value="Cancel">
+		<input class="tiny" type="text" name="btn3" id="btn3" value="">
+		<input class="tiny" type="text" name="btn4" id="btn4" value="">
+		<input class="tiny" type="text" name="btn5" id="btn5" value="Help">
+	</div>
+
+	<div class="Row">
+		<label>Button codes<br>(ASCII, dec, CSV)</label>
+		<input class="tiny" type="text" name="bm1" id="bm1" value="01,121">
+		<input class="tiny" type="text" name="bm2" id="bm2" value="01,110">
+		<input class="tiny" type="text" name="bm3" id="bm3" value="">
+		<input class="tiny" type="text" name="bm4" id="bm4" value="">
+		<input class="tiny" type="text" name="bm5" id="bm5" value="05">
+	</div>
+
+	<div class="Row checkbox" >
+		<label>Enter = CR+LF (LNM)</label><!--
+		--><span class="box" tabindex=0 role=checkbox></span>
+		<input type="hidden" id="crlf_mode" name="crlf_mode" value="">
+	</div>
+
+	<div class="Row checkbox" >
+		<label>Local Echo (<span style="text-decoration:overline">SRM</span>)</label><!--
+		--><span class="box" tabindex=0 role=checkbox></span>
+		<input type="hidden" id="loopback" name="loopback" value="">
+	</div>
+
+	<div class="Row buttons">
 		<a class="button icn-ok" href="#" onclick="qs('#form-initial').submit()">Apply!</a>
 	</div>
 </form>
 
-<form class="Box fold str" action="term_set.html" method="GET" id="form-uart">
-	<h2 tabindex=0>Serial Port</h2>
+<!-- UART -->
+<form class="Box mobcol str" action="term_set.html" method="GET" id="form-uart">
+	<h2 tabindex=0>Serial Port Parameters</h2>
 
 	<div class="Row explain">
 		
-		This form controls the primary, communication UART. The debug UART is fixed 
+		This form controls the communication UART. The debug UART is fixed 
 		at 115.200 baud, one stop-bit and no parity.
 			</div>
 
@@ -246,7 +277,8 @@
 	</div>
 </form>
 
-<form class="Box fold str" action="term_set.html" method="GET" id='form-expert'>
+<!-- Expert terminal opts -->
+<form class="Box mobcol str" action="term_set.html" method="GET" id='form-expert'>
 	<h2>Expert Options</h2>
 
 	<div class="Row explain">
@@ -272,15 +304,6 @@
 		<span class="mq-no-phone">&nbsp;ms</span>
 	</div>
 
-	<div class="Row">
-		<label>Button codes<br>(ASCII, dec, CSV)</label>
-		<input class="short" type="text" name="bm1" id="bm1" value="01,121">&nbsp;
-		<input class="short" type="text" name="bm2" id="bm2" value="01,110">&nbsp;
-		<input class="short" type="text" name="bm3" id="bm3" value="">&nbsp;
-		<input class="short" type="text" name="bm4" id="bm4" value="">&nbsp;
-		<input class="short" type="text" name="bm5" id="bm5" value="05">
-	</div>
-
 	<div class="Row checkbox" >
 		<label>SS3 Fn keys</label><!--
 		--><span class="box" tabindex=0 role=checkbox></span>
@@ -294,21 +317,9 @@
 	</div>
 
 	<div class="Row checkbox" >
-		<label>Enter sends CR+LF</label><!--
-		--><span class="box" tabindex=0 role=checkbox></span>
-		<input type="hidden" id="crlf_mode" name="crlf_mode" value="">
-	</div>
-
-	<div class="Row checkbox" >
 		<label>Show nav links</label><!--
 		--><span class="box" tabindex=0 role=checkbox></span>
 		<input type="hidden" id="show_config_links" name="show_config_links" value="1">
-	</div>
-
-	<div class="Row checkbox" >
-		<label>Local Echo</label><!--
-		--><span class="box" tabindex=0 role=checkbox></span>
-		<input type="hidden" id="loopback" name="loopback" value="">
 	</div>
 
 	<div class="Row buttons">
@@ -317,8 +328,6 @@
 </form>
 
 <script>
-	$('#default_fg').val(7);
-	$('#default_bg').val(0);
 	$('#cursor_shape').val();
 	$('#theme').val(0);
 
@@ -327,19 +336,59 @@
     $('#uart_stopbits').val(1);
 
 	function showColor() {
-		var ex = qs('#color-example');
-		ex.dataset.fg = +$('#default_fg').val();
-		ex.dataset.bg = +$('#default_bg').val();
+		var ex = qs('.color-example');
+		var fg = $('#default_fg').val();
+		var bg = $('#default_bg').val();
+
+		if (/^\d+$/.test(fg)) fg = +fg;
+		else if (!/^#[\da-f]{6}$/i.test(fg)) {
+		  fg = 'black';
+		}
+
+		if (/^\d+$/.test(bg)) bg = +bg;
+		else if (!/^#[\da-f]{6}$/i.test(bg)) {
+		  bg = 'black';
+		}
+
+		ex.dataset.fg = fg;
+		ex.dataset.bg = bg;
+
 		themes.themePreview(+$('#theme').val())
 	}
 	showColor();
 
-	$('.colorprev span').on('click', function() {
-		var fg = this.dataset.fg;
+	$('#default_fg').on('input', showColor)
+	$('#default_bg').on('input', showColor)
+
+	$('.colorprev.bg span').on('click', function() {
 		var bg = this.dataset.bg;
-		if (typeof fg != 'undefined') $('#default_fg').val(fg);
 		if (typeof bg != 'undefined') $('#default_bg').val(bg);
 		showColor()
+	});
+
+	$('.colorprev.fg span').on('click', function() {
+		var fg = this.dataset.fg;
+		if (typeof fg != 'undefined') $('#default_fg').val(fg);
+		showColor()
+	});
+
+	var $presets = $('#fgbg_presets');
+	for(var i = 0; i < themes.fgbgThemes.length; i++) {
+	  fg = themes.fgbgThemes[i][0];
+	  bg = themes.fgbgThemes[i][1];
+      $presets
+        .htmlAppend(
+          '<span class="preset" ' +
+          'data-xfg="'+fg+'" data-xbg="'+bg+'" ' +
+          'style="color:'+fg+';background:'+bg+'">&nbsp;['+i+']&nbsp;</span>');
+
+	  if ((i+1)%5==0) $presets.htmlAppend('<br>');
+	}
+
+	$('.preset').on('click', function() {
+      $('#default_fg').val(this.dataset.xfg)
+      $('#default_bg').val(this.dataset.xbg)
+      showColor()
 	});
 </script>
 

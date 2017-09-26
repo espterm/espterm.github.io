@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>System Settings :: ESPTerm</title>
-	<link href="/css/app.310033b.css" rel="stylesheet">
-	<script src="/js/app.310033b.js"></script>
+	<link href="/css/app.f5dd70a.css" rel="stylesheet">
+	<script src="/js/app.f5dd70a.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -27,6 +27,9 @@
 	<span class="lead">Validation errors for:</span>&nbsp;<span class="list"></span>
 </div>
 
+<div class="Box message hidden"></div>
+
+<!-- Persist -->
 <div class="Box str mobcol">
 	<h2 tabindex=0>Save & Restore</h2>
 
@@ -50,18 +53,44 @@
 	<div class="Row buttons2">
 		<a onclick="return confirm('Restore to firmware default settings? This will reset all active settings and switch to AP mode with the default SSID.');"
 		   href="restore_hard.html">
-			Reset active settings to firmware defaults		</a>
-	</div>
+			Reset active settings to factory defaults		</a><br>
+		(This clears the WiFi config! Does not affect saved defaults or admin password.)	</div>
 </div>
 
+<!-- Overclock -->
+<form class="Box str mobcol" action="system_set.html" method="GET" id="form-hw">
+	<h2 tabindex=0>Hardware Tuning</h2>
 
-<form class="Box str mobcol" action="system_set.html" method="GET" id="form-2">
+	<div class="Row explain">
+		
+		ESP8266 can be overclocked from 80&nbsp;MHz to 160&nbsp;MHz. 
+		This will make it more responsive and allow faster screen updates
+		at the expense of slightly higher power consumption. This can also make 
+		it more susceptible to interference. Use with care.
+			</div>
+
+	<div class="Row checkbox" >
+		<label>Overclock to 160MHz</label><!--
+		--><span class="box" tabindex=0 role=checkbox></span>
+		<input type="hidden" id="overclock" name="overclock" value="">
+	</div>
+
+	<div class="Row buttons">
+		<a class="button icn-ok" href="#" onclick="qs('#form-hw').submit()">Apply!</a>
+	</div>
+</form>
+
+
+
+<!-- Access perms -->
+<form class="Box str mobcol" action="system_set.html" method="GET" id="form-access">
 	<h2 tabindex=0>Access Restrictions</h2>
 
 	<div class="Row explain">
 		
 		Some parts, or all of the web interface can be protected by a password prompt.
-		Leave the new password fields empty if you do not wish to change it.
+		Leave the new password fields empty if you do not wish to change it.<br>
+		The default password is "%def_access_pw%".
 		</div>
 
 	<div class="Row">
@@ -86,7 +115,7 @@
 	</div>
 
 	<div class="Row">
-		<label for="access_pw2">New pass., repeat</label>
+		<label for="access_pw2">Repeat</label>
 		<input type="password" name="access_pw2" id="access_pw2" readonly onfocus="this.removeAttribute('readonly')" style="cursor:text" autocomplete="off">
 	</div>
 
@@ -96,11 +125,12 @@
 	</div>
 
 	<div class="Row buttons">
-		<a class="button icn-ok" href="#" onclick="qs('#form-2').submit()">Apply!</a>
+		<a class="button icn-ok" href="#" onclick="qs('#form-access').submit()">Apply!</a>
 	</div>
 </form>
 
-<form class="Box str mobcol" action="system_set.html" method="GET" id="form-3">
+<!-- Admin pw -->
+<form class="Box str mobcol" action="system_set.html" method="GET" id="form-admin">
 	<h2 tabindex=0>Change Admin Password</h2>
 
 	<div class="Row explain">
@@ -109,26 +139,27 @@
 		and to change access restrictions. This password is not saved as part 
 		of the main config, i.e. using save / restore does not affect this 
 		password. When the admin password is forgotten, the easiest way to
-		re-gain access is to wipe and re-flash the chip. 
+		re-gain access is to wipe and re-flash the chip.<br>
+		The default admin password is "%def_admin_pw%".
 			</div>
 
 	<div class="Row">
-		<label for="admin_pw">New admin pass.</label>
+		<label for="admin_pw">New admin password</label>
 		<input type="password" name="admin_pw" id="admin_pw">
 	</div>
 
 	<div class="Row">
-		<label for="admin_pw2">New pass., repeat</label>
+		<label for="admin_pw2">Repeat</label>
 		<input type="password" name="admin_pw2" id="admin_pw2">
 	</div>
 
 	<div class="Row">
-		<label for="pw">Old admin pass.</label>
+		<label for="pw">Old admin password</label>
 		<input type="password" name="pw" id="pw" required>
 	</div>
 
 	<div class="Row buttons">
-		<a class="button icn-ok" href="#" onclick="qs('#form-3').submit()">Apply!</a>
+		<a class="button icn-ok" href="#" onclick="qs('#form-admin').submit()">Apply!</a>
 	</div>
 </form>
 
