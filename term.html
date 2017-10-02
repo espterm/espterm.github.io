@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>Terminal :: ESPTerm</title>
-	<link href="/css/app.f5dd70a.css" rel="stylesheet">
-	<script src="/js/app.f5dd70a.js"></script>
+	<link href="/css/app.69e5b77.css" rel="stylesheet">
+	<script src="/js/app.69e5b77.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -37,7 +37,7 @@
 				<textarea id="fu_text"></textarea>
 			</p>
 			<p>
-				<label for="fu_crlf">Line Endings:</label>
+				<label for="fu_crlf">Line endings:</label>
 				<select id="fu_crlf">
 					<option value="CR">CR (Enter key)</option>
 					<option value="CRLF">CR LF (Windows)</option>
@@ -45,8 +45,12 @@
 				</select>
 			</p>
 			<p>
-				<label for="fu_delay">Line Delay (ms):</label>
+				<label for="fu_delay">Chunk delay (ms):</label>
 				<input id="fu_delay" type="number" value=1 min=0>
+			</p>
+			<p>
+				<label for="fu_chunk">Chunk size (0=line):</label>
+				<input id="fu_chunk" type="number" value=0 min=0 max=100>
 			</p>
 		</div>
 		<div class="fu-buttons">
@@ -66,15 +70,13 @@
 		<div id="touch-select-menu">
 			<button id="touch-select-copy-btn">Copy</button>
 		</div>
+		<div class="screen-margin top"></div>
+		<div class="screen-margin left"></div>
+		<div class="screen-margin right"></div>
+		<div class="screen-margin bottom"></div>
 	</div>
 
-	<div id="action-buttons">
-		<button data-n="1"></button><!--
-		--><button data-n="2"></button><!--
-		--><button data-n="3"></button><!--
-		--><button data-n="4"></button><!--
-		--><button data-n="5"></button>
-	</div>
+	<div id="action-buttons"></div>
 </div>
 
 <nav id="term-nav">
@@ -89,13 +91,7 @@
 <script>
   try {
     window.noAutoShow = true;
-    termInit({
-      labels: 'TESPTerm Web UI Demo\u0001OK\u0001Cancel\u0001\u0001\u0001Help',
-	  theme: +'0',
-      defaultFg: +'7',
-	  defaultBg: +'0',
-	  allFn: !!+'0',
-    });
+    termInit({ allFn: !!+'0', });
   } catch (e) {
     console.error(e);
 	      console.error("Fail, reloading in 3s…");

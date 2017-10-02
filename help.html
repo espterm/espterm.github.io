@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>Quick Reference :: ESPTerm</title>
-	<link href="/css/app.f5dd70a.css" rel="stylesheet">
-	<script src="/js/app.f5dd70a.js"></script>
+	<link href="/css/app.69e5b77.css" rel="stylesheet">
+	<script src="/js/app.69e5b77.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -51,15 +51,14 @@
 				appear on the screen. Set <i>Parser Timeout = 0</i> in <a href="cfg_term.html">Terminal Settings</a>
 				to be able to manually enter escape sequences.
 
-			<li>There is very little RAM available to the webserver, and it can support at most 4 connections at the same time.
-				Each terminal session (open window with the terminal screen) uses one persistent connection for screen updates.
-				<b>Avoid leaving unused windows open</b>, or either the RAM or connections may be exhausted.
+			<li>Use Ctrl+F12 to open a screen debug panel. Additional debugging can be enabled in the
+				<a href="cfg_term.html">Terminal Settings</a> (near the bottom).
 
 			<li><b>For best performance</b>, use the module in Client mode (connected to external network) and minimize the number
 				of simultaneous connections. Enabling AP consumes extra RAM because the DHCP server and Captive Portal
 				DNS server are started.
 
-			<li>In AP mode, <b>check that the WiFi channel used is clear</b>; interference may cause flaky connection.
+			<li><b>Check that the WiFi channel used is clear</b>; interference may cause flaky connection.
 				A good mobile app to use for this is
 				<a href="https://play.google.com/store/apps/details?id=com.farproc.wifi.analyzer">WiFi Analyzer (Google Play)</a>.
 				Adjust the hotspot strength and range using the <i>Tx Power setting</i>.
@@ -513,7 +512,7 @@
 </div>
 
 <div class="Box fold">
-	<h2>Commands: Style attributes</h2>
+	<h2>Commands: Style Attributes</h2>
 
 	<div class="Row v">
 		<p>
@@ -553,7 +552,7 @@
 
 
 <div class="Box fold">
-	<h2>Commands: Color attributes</h2>
+	<h2>Commands: Color Attributes</h2>
 
 	<div class="Row v">
 		<p>
@@ -927,6 +926,94 @@
 			</tr>
 			</tbody>
 		</table>
+	</div>
+</div>
+
+<div class="Box fold">
+	<h2>Commands: Networking</h2>
+
+	<div class="Row v">
+		<p>
+			ESPTerm implements commands for device-to-device messaging and for requesting external
+			servers. This can be used e.g. for remote control, status reporting or data upload / download.
+		</p>
+
+		<p>
+			Networking commands use the format <code>\e^...\a</code>, a Privacy Message (PM).
+			PM is similar to OSC, which uses <code>]</code> in place of <code>^</code>. The PM payload (text between <code>\e^</code> and <code>\a</code>)
+			must be shorter than 256 bytes,	and should not contain any control characters (ASCII < 32).
+		</p>
+
+		<h3>Device-to-device Messaging</h3>
+
+		<p>
+			To send a message to another ESPTerm module, use: <code>\e^M;<i>DestIP</i>;<i>message</i>\a</code>.
+		</p>
+
+		<p>
+			This command sends a POST request to <code>http://<i>&lt;DestIP&gt;</i>/api/v1/msg</code>.
+			The IP address may be appended by a port, if needed (eg. :8080).
+		</p>
+
+		<p>
+			Each ESPTerm listens for such requests and relays them to UART:
+			<code>\e^m;<i>SrcIP</i>;L=<i>length</i>;<i>message</i>\a</code>, with <i>length</i> being the byte length of
+			<i>message</i>, as ASCII.
+		</p>
+
+		<p>
+			Notice a pattern with the first letter: capital is always a command, lower case a response.
+			This is followed with the HTTP commands and any networking commands added in the future.
+		</p>
+
+		<p>
+			<b>Example:</b> Node 192.168.0.10 sends a message to 192.168.0.19: <code>\e^M;192.168.0.19;Hello\a</code>.
+			Node 192.168.0.19 receives <code>\e^m;192.168.0.10;L=5;Hello\a</code> on the UART. Note that the IP
+			address in the reception message is that of the first node, thus it can be used to send a message back.
+		</p>
+
+		<h3>External HTTP requests</h3>
+
+		<p>
+			To request an external server, use <code>\e^H;<i>method</i>;<i>options</i>;<i>url</i>\n<i>body</i>\a</code>.
+		</p>
+
+		<ul>
+			<li><code><i>method</i></code> - can be any usual HTTP verb, such as <code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>HEAD</code>.
+			<li><code><i>options</i></code> - is a comma-separated list of flags and parameters:
+				<ul>
+					<li><code>H</code> - get response headers
+					<li><code>B</code> - get response body
+					<li><code>X</code> - ignore the response, return nothing
+					<li><code>T=<i>ms</i></code> - request timeout (default 5000&nbsp;ms), in milliseconds
+					<li><code>L=<i>bytes</i></code> - limit response length (default 0 = don't limit). Applies to the head, body, or both combined, depending on the <code>H</code> and <code>B</code> flags
+					<li><code>l=<i>bytes</i></code> - limit the response buffer size (default 5000&nbsp;B).
+						This can reduce RAM usage, however it shouldn't be set too small, as this buffer
+						is used for both headers and the response body.
+				</ul>
+			<li><code><i>url</i></code> - full request URL, including <code>http://</code>. Port may be specified if different from :80,
+				and GET arguments may be appended to the URL if needed.
+			<li><code><i>body</i></code> - optional, separated from <code><i>url</i></code> by a single line feed character (<code>\n</code>).
+				This can be used for POST and PUT requests. Note: the command may be truncated to the
+				maximum total length of 256 characters if too long.
+		</ul>
+
+		<p>The response has the following format: <code>\e^h;<i>status</i>;<i>options</i>;<i>response</i>\a</code></p>
+
+		<ul>
+			<li><code><i>status</i></code> - a HTTP status code, eg. 200 is OK, 404 Not found.
+			<li><code><i>options</i></code> - similar to those in the request, here describing the response data.
+				This field can contain comma-separated <code>B</code>, <code>H</code> and <code>L=<i>bytes</i></code>.
+			<li><code><i>response</i></code> - the response, as requested. If both headers and body are received,
+				they will be separated by an empty line (i.e. <code>\r\n\r\n</code>). Response can be up to several
+				kilobytes long, depending on the <code>L=</code> and <code>l=</code> options.
+		</ul>
+
+		<p>
+			<b>Example:</b> <code>\e^H;GET;B;http://wtfismyip.com/text\a</code> - get the body of a web page
+			(wtfismyip.com is a service that sends back your IP address).
+			A response could be <code>\e^h;200;B,L=11;80.70.60.50\a</code>.
+		</p>
 	</div>
 </div>
 
