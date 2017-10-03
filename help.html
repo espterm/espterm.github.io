@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>Quick Reference :: ESPTerm</title>
-	<link href="/css/app.69e5b77.css" rel="stylesheet">
-	<script src="/js/app.69e5b77.js"></script>
+	<link href="/css/app.4a032ee-en.css" rel="stylesheet">
+	<script src="/js/app.4a032ee-en.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -208,6 +208,7 @@
 			Here are some examples of control key codes:
 		</p>
 
+		<div class="tscroll">
 		<table>
 			<thead><tr><th>Key</th><th>Code</th><th>Key</th><th>Code</th></tr></thead>
 			<tr>
@@ -295,6 +296,7 @@
 				<td>ASCII 1-26</td>
 			</tr>
 		</table>
+		</div>
 
 		<h3>Action buttons</h3>
 
@@ -952,7 +954,10 @@
 
 		<p>
 			This command sends a POST request to <code>http://<i>&lt;DestIP&gt;</i>/api/v1/msg</code>.
-			The IP address may be appended by a port, if needed (eg. :8080).
+			The IP address may be appended by a port, if needed (eg. :8080). In addition to POST,
+			a GET request can also be used. In that case, any GET arguments (<code>/api/v1/msg?<i>arguments</i></code>)
+			will be used instead of the request body. This is intended for external access
+			when sending POST requests is not convenient.
 		</p>
 
 		<p>
@@ -985,6 +990,8 @@
 					<li><code>H</code> - get response headers
 					<li><code>B</code> - get response body
 					<li><code>X</code> - ignore the response, return nothing
+					<li><code>N=<i>nonce</i></code> - a custom string that will be added in the options field of the response message.
+						Use this to keep track of which request a response belongs to.
 					<li><code>T=<i>ms</i></code> - request timeout (default 5000&nbsp;ms), in milliseconds
 					<li><code>L=<i>bytes</i></code> - limit response length (default 0 = don't limit). Applies to the head, body, or both combined, depending on the <code>H</code> and <code>B</code> flags
 					<li><code>l=<i>bytes</i></code> - limit the response buffer size (default 5000&nbsp;B).
@@ -1003,7 +1010,7 @@
 		<ul>
 			<li><code><i>status</i></code> - a HTTP status code, eg. 200 is OK, 404 Not found.
 			<li><code><i>options</i></code> - similar to those in the request, here describing the response data.
-				This field can contain comma-separated <code>B</code>, <code>H</code> and <code>L=<i>bytes</i></code>.
+				This field can contain comma-separated <code>B</code>, <code>H</code> and <code>L=<i>bytes</i></code> and <code>N=<i>nonce</i></code>.
 			<li><code><i>response</i></code> - the response, as requested. If both headers and body are received,
 				they will be separated by an empty line (i.e. <code>\r\n\r\n</code>). Response can be up to several
 				kilobytes long, depending on the <code>L=</code> and <code>l=</code> options.
