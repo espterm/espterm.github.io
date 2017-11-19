@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>Terminal Settings :: ESPTerm</title>
-	<link href="/css/app.32c889b-en.css" rel="stylesheet">
-	<script src="/js/app.32c889b-en.js"></script>
+	<link href="/css/app.8b43b1d-en.css" rel="stylesheet">
+	<script src="/js/app.8b43b1d-en.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -28,6 +28,7 @@
 </div>
 
 <div class="Box message hidden"></div>
+<div class="Box errmessage hidden"></div>
 
 <div class="Box">
 	<a href="reset_screen.html">Reset screen & parser</a>
@@ -170,24 +171,29 @@
 
 	<div class="Row">
 		<div class="SubRow">
-			<label for="term_width">Width</label>
-			<input type="number" step=1 min=1 max=255 name="term_width" id="term_width" value="80" required>
+			<label for="width">Width</label>
+			<input type="number" step=1 min=1 max=255 name="width" id="width" value="80" required>
 		</div>
 		<div class="SubRow">
-			<label for="term_height">Height</label>
-			<input type="number" step=1 min=1 max=255 name="term_height" id="term_height" value="25" required>
+			<label for="height">Height</label>
+			<input type="number" step=1 min=1 max=255 name="height" id="height" value="25" required>
 		</div>
 	</div>
 
 	<div class="Row">
-		<label for="term_title">Header Text</label>
-		<input type="text" name="term_title" id="term_title" value="ESPTerm Web UI Demo" required>
+		<label for="title">Header Text</label>
+		<input type="text" name="title" id="title" value="ESPTerm Web UI Demo" required>
 	</div>
 
 	<div class="Row checkbox" >
 		<label>Show buttons</label><!--
 		--><span class="box" tabindex=0 role=checkbox></span>
 		<input type="hidden" id="show_buttons" name="show_buttons" value="1">
+	</div>
+
+	<div class="Row">
+		<label for="button_count">Button count</label>
+		<input type="number" step=1 min=0 max=5 name="button_count" id="button_count" value="5" required>
 	</div>
 
 	<div class="Row">
@@ -206,6 +212,15 @@
 		<input class="tiny" type="text" name="bm3" id="bm3" value="">
 		<input class="tiny" type="text" name="bm4" id="bm4" value="">
 		<input class="tiny" type="text" name="bm5" id="bm5" value="05">
+	</div>
+
+	<div class="Row">
+		<label>Button colors</label>
+		<input class="tiny" type="text" name="bc1" id="bc1" value="">
+		<input class="tiny" type="text" name="bc2" id="bc2" value="">
+		<input class="tiny" type="text" name="bc3" id="bc3" value="">
+		<input class="tiny" type="text" name="bc4" id="bc4" value="">
+		<input class="tiny" type="text" name="bc5" id="bc5" value="">
 	</div>
 
 	<div class="Row">
@@ -241,8 +256,8 @@
 			</div>
 
 	<div class="Row">
-		<label for="uart_baud">Baud rate<span class="mq-phone">&nbsp;(bps)</span></label>
-		<select name="uart_baud" id="uart_baud" class="short">
+		<label for="uart_baudrate">Baud rate<span class="mq-phone">&nbsp;(bps)</span></label>
+		<select name="uart_baudrate" id="uart_baudrate" class="short">
 			<option value="300">300</option>
 			<option value="600">600</option>
 			<option value="1200">1.200</option>
@@ -294,6 +309,17 @@
 		
 		Those are advanced config options that usually don't need to be changed.
 		Edit them only if you know what you're doing.	</div>
+
+	<div class="Row">
+		<label for="font_stack">Font stack</label>
+		<input type="text" name="font_stack" id="font_stack" value="" required>
+	</div>
+
+	<div class="Row">
+		<label for="font_size">Font size<span class="mq-phone">&nbsp;(px)</span></label>
+		<input type="number" step=1 min=0 name="font_size" id="font_size" value="20" required>
+		<span class="mq-no-phone">&nbsp;px</span>
+	</div>
 
 	<div class="Row">
 		<label for="parser_tout_ms">Parser Timeout<span class="mq-phone">&nbsp;(ms)</span></label>
@@ -358,7 +384,7 @@
   $.ready(function () {
     $('#cursor_shape').val('');
     $('#theme').val('0');
-    $('#uart_baud').val('115200');
+    $('#uart_baudrate').val('115200');
     $('#uart_parity').val('2');
     $('#uart_stopbits').val('1');
 

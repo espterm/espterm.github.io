@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>System Settings :: ESPTerm</title>
-	<link href="/css/app.32c889b-en.css" rel="stylesheet">
-	<script src="/js/app.32c889b-en.js"></script>
+	<link href="/css/app.8b43b1d-en.css" rel="stylesheet">
+	<script src="/js/app.8b43b1d-en.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -28,6 +28,7 @@
 </div>
 
 <div class="Box message hidden"></div>
+<div class="Box errmessage hidden"></div>
 
 <!-- Persist -->
 <div class="Box str mobcol">
@@ -55,6 +56,27 @@
 		   href="restore_hard.html">
 			Reset active settings to factory defaults		</a><br>
 		(This clears the WiFi config! Does not affect saved defaults or admin password.)	</div>
+</div>
+
+<!-- Backup -->
+<div class="Box str mobcol">
+	<h2 tabindex=0>Back-up Config File</h2>
+
+	<div class="Row explain nomargintop">
+		All config except the admin password can be backed up and restored using an INI file.	</div>
+
+	<div class="Row buttons2">
+		<a class="button"
+		   href="ini_export.html">
+			Export to file		</a>
+	</div>
+
+	<div class="Row buttons2">
+		<form method="POST" action="ini_import.html" enctype='multipart/form-data'>
+			<span class="filewrap"><input accept=".ini,text/plain" type="file" name="file"></span><!--
+			--><input type="submit" value="Import!">
+		</form>
+	</div>
 </div>
 
 <!-- Overclock -->

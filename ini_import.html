@@ -1,0 +1,7 @@
+<!DOCTYPE HTML>
+			<script>
+				var ref = document.referrer;
+				var qat = document.referrer.indexOf('?');
+				if (qat !== -1) ref = ref.substring(0, qat)
+				location.href=ref+'?msg=Request ignored, this is a demo.';
+			</script>

@@ -5,8 +5,8 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
 	<title>Quick Reference :: ESPTerm</title>
-	<link href="/css/app.32c889b-en.css" rel="stylesheet">
-	<script src="/js/app.32c889b-en.js"></script>
+	<link href="/css/app.8b43b1d-en.css" rel="stylesheet">
+	<script src="/js/app.8b43b1d-en.js"></script>
 	<script>
 		var _root = location.host;
 		var _demo = 1;
@@ -28,6 +28,7 @@
 </div>
 
 <div class="Box message hidden"></div>
+<div class="Box errmessage hidden"></div>
 
 <div class="Box">
 	<div noprint><a href="#" onclick="hpfold(1);return false">Expand all</a>&nbsp;|&nbsp;<a href="#" onclick="hpfold(0);return false">Collapse all</a><br>
@@ -891,31 +892,108 @@
 			If an argument is left out, it's treated as 0 or 1, depending on what makes sense for the command.
 		</p>
 
+		<h3>Erasing &amp; Inserting</h3>
+
 		<table class="ansiref w100">
 			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
 			<tbody>
 			<tr>
-				<td>
-					<code>\e[<i>m</i>J</code>
-				</td>
+				<td><code>\e[<i>m</i>J</code></td>
 				<td>
 					Clear part of screen. <i>m</i>: 0 - from cursor, 1 - to cursor, 2 - all
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<code>\e[<i>m</i>K</code>
-				</td>
+				<td><code>\e[<i>m</i>K</code></td>
 				<td>
 					Erase part of line. <i>m</i>: 0 - from cursor, 1 - to cursor, 2 - all
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<code>\e[<i>n</i>X</code></td>
+				<td><code>\e[<i>n</i>X</code></td>
 				<td>
 					Erase <i>n</i> characters in line.
 				</td>
+			</tr>
+			<tr>
+				<td><code>
+					\e[<i>n</i>L<br>\e[<i>n</i>M
+				</code></td>
+				<td>
+					Insert (<code>L</code>) or delete (<code>M</code>) <i>n</i> lines. Following lines are pulled up or pushed down.
+				</td>
+			</tr>
+			<tr>
+				<td><code>
+					\e[<i>n</i>@<br>\e[<i>n</i>P
+				</code></td>
+				<td>
+					Insert (<code>@</code>) or delete (<code>P</code>) <i>n</i> characters. The rest of the line is pulled left or pushed right.
+					Characters going past the end of line are lost.
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h3>Supersized lines</h3>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td><code>\e#1</code>, <code>\e#2</code></td>
+				<td>
+					Make the current line part of a double-height line.
+					Use <code>1</code> for the top, <code>2</code> for the bottom half.
+				</td>
+			</tr>
+			<tr>
+				<td><code>\e#3</code>, <code>\e#4</code></td>
+				<td>
+					Make the current line part of a double-width, double-height line.
+					Use <code>3</code> for the top, <code>4</code> for the bottom half.
+				</td>
+			</tr>
+			<tr>
+				<td><code>\e#6</code></td>
+				<td>
+					Make the current line double-width.
+				</td>
+			</tr>
+			<tr>
+				<td><code>\e#5</code></td>
+				<td>
+					Reset the current line to normal size.
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h3>Other</h3>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td><code>\ec</code></td>
+				<td>
+					Clear screen, reset attributes and cursor. This command also restores the default
+					screen size, title, button labels and messages and the background URL.
+				</td>
+			</tr>
+			<tr>
+				<td><code>
+					\e[?1049h<br>\e[?1049l
+				</code></td>
+				<td>
+					Switch to (<code>h</code>) or from (<code>l</code>) an alternate screen.
+					ESPTerm can't implement this fully, so the original screen content is not saved,
+					but it will remember the cursor, screen size, terminal title, button labels and messages.
+				</td>
+			</tr>
+			<tr>
+				<td><code>\e[8;<i>r</i>;<i>c</i>t</code></td>
+				<td>Set screen size to <i>r</i> rows and <i>c</i> columns (this is a command borrowed from Xterm)</td>
 			</tr>
 			<tr>
 				<td>
@@ -925,24 +1003,10 @@
 				</td>
 			</tr>
 			<tr>
+				<td><code>\e#8</code></td>
 				<td>
-					<code>
-						\e[<i>n</i>L<br>\e[<i>n</i>M
-					</code>
-				</td>
-				<td>
-					Insert (<code>L</code>) or delete (<code>M</code>) <i>n</i> lines. Following lines are pulled up or pushed down.
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<code>
-						\e[<i>n</i>@<br>\e[<i>n</i>P
-					</code>
-				</td>
-				<td>
-					Insert (<code>@</code>) or delete (<code>P</code>) <i>n</i> characters. The rest of the line is pulled left or pushed right.
-					Characters going past the end of line are lost.
+					Reset all screen attributes to default and fill the screen with the letter "E". This was
+					historically used for aligning CRT displays, now can be useful e.g. for testing erasing commands.
 				</td>
 			</tr>
 			</tbody>
@@ -1053,6 +1117,8 @@
 			Those changes are not retained after restart.
 		</p>
 
+		<h3>Single-byte commands &amp; queries</h3>
+
 		<table class="ansiref w100">
 			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
 			<tbody>
@@ -1074,23 +1140,20 @@
 				</td>
 			</tr>
 			<tr>
-				<td><code>\ec</code></td>
-				<td>
-					Clear screen, reset attributes and cursor. This command also restores the default
-					screen size, title, button labels and messages and the background URL.
-				</td>
-			</tr>
-			<tr>
-				<td><code>\e[8;<i>r</i>;<i>c</i>t</code></td>
-				<td>Set screen size to <i>r</i> rows and <i>c</i> columns (this is a command borrowed from Xterm)</td>
-			</tr>
-			<tr>
 				<td><code>\e[5n</code></td>
 				<td>
 					Query device status, ESPTerm replies with <code>\e[0n</code> "device is OK".
 					Can be used to check if the terminal has booted up and is ready to receive commands.
 				</td>
 			</tr>
+			</tbody>
+		</table>
+
+		<h3>Setting parameters</h3>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
 			<tr>
 				<td><code>\e[<i>n</i> q</code></td>
 				<td>
@@ -1105,7 +1168,7 @@
 				<td>Set screen title to <i>t</i> (this is a standard OSC command)</td>
 			</tr>
 			<tr>
-				<td><code>\e]70;<i>u</i>\a</code></td>
+				<td><code>\e]27;1;<i>u</i>\a</code></td>
 				<td>
 					Set background image to URL <i>u</i> (including protocol)
 					that can be resolved by the user's browser. The image will be scaled
@@ -1115,77 +1178,62 @@
 				</td>
 			</tr>
 			<tr>
+				<td><code>\e]27;2;<i>n</i>\a</code></td>
 				<td>
-					<code>
-						\e]<i>8x</i>;<i>t</i>\a
-					</code>
+					Set number of visible buttons to <i>n</i> (0-5). To hide/show the entire buttons bar,
+					use the dedicated hiding commands (see below)
 				</td>
+			</tr>
+			<tr>
+				<td><code>
+					\e]28;<i>x</i>;<i>t</i>\a
+				</code></td>
 				<td>
-					Set label for button 1-5 (code 81-85) to <i>t</i> - e.g.<code>\e]81;Yes\a</code>
+					Set label for button <i>x</i> (1-5) to <i>t</i> - e.g.<code>\e]28;1;Yes\a</code>
 					sets the first button text to "Yes".
 				</td>
 			</tr>
 			<tr>
+				<td><code>
+					\e]29;<i>x</i>;<i>m</i>\a
+				</code></td>
 				<td>
-					<code>
-						\e]<i>9x</i>;<i>m</i>\a
-					</code>
-				</td>
-				<td>
-					Set message for button 1-5 (code 91-95) to <i>m</i> - e.g.<code>\e]94;+\a</code>
+					Set message for button <i>x</i> (1-5) to <i>m</i> - e.g.<code>\e]29;3;+\a</code>
 					sets the 3rd button to send "+" when pressed. The message can be up to
 					10 bytes long.
 				</td>
 			</tr>
 			<tr>
+				<td><code>
+					\e]30;<i>x</i>;<i>c</i>\a
+				</code></td>
 				<td>
-					<code>
-						\e]9;<i>t</i>\a
-					</code>
-				</td>
-				<td>
-					Show a notification with text <i>t</i>. This will be either a desktop notification
-					or a pop-up balloon.
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<code>
-						\e[?<i>n</i>s<br>\e[?<i>n</i>r
-					</code>
-				</td>
-				<td>
-					Save (<code>s</code>) and restore (<code>r</code>) any option set using <code>CSI ? <i>n</i> h</code>.
-					This is used by some applications to back up the original state before
-					making changes.
+					Set button <i>x</i> (1-5) color to <i>c</i> - e.g.<code>\e]30;2;#00FF00\a</code>
+					makes the 2nd button green. Supported are SGR colors 1-255
+					and TrueColor in the format <code>#RRGGBB</code>. Use 0 to
+					reset to the default color.
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<code>
-						\e[?800h<br>\e[?800l
-					</code>
-				</td>
+				<td><code>
+					\e[?800h<br>\e[?800l
+				</code></td>
 				<td>
 					Show (<code>h</code>) or hide (<code>l</code>) the action buttons (the blue buttons under the screen).
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<code>
-						\e[?801h<br>\e[?801l
-					</code>
-				</td>
+				<td><code>
+					\e[?801h<br>\e[?801l
+				</code></td>
 				<td>
 					Show (<code>h</code>) or hide (<code>l</code>) menu/help links under the screen.
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<code>
-						\e[?2004h<br>\e[?2004l
-					</code>
-				</td>
+				<td><code>
+					\e[?2004h<br>\e[?2004l
+				</code></td>
 				<td>
 					Enable (<code>h</code>) or disable (<code>l</code>) Bracketed Paste mode.
 					This mode makes any text sent using the Upload Tool be preceded by <code>\e[200~</code>
@@ -1194,26 +1242,39 @@
 				</td>
 			</tr>
 			<tr>
-				<td>
-					<code>
-						\e[?1049h<br>\e[?1049l
-					</code>
-				</td>
-				<td>
-					Switch to (<code>h</code>) or from (<code>l</code>) an alternate screen.
-					ESPTerm can't implement this fully, so the original screen content is not saved,
-					but it will remember the cursor, screen size, terminal title, button labels and messages.
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<code>
-						\e[12h<br>\e[12l
-					</code>
-				</td>
+				<td><code>
+					\e[12h<br>\e[12l
+				</code></td>
 				<td>
 					Enable (<code>h</code>) or disable (<code>l</code>) Send-Receive Mode (SRM).
 					SRM is the opposite of Local Echo, meaning <code>\e[12h</code> disables and <code>\e[12l</code> enables Local Echo.
+				</td>
+			</tr>
+			</tbody>
+		</table>
+
+		<h3>Other</h3>
+
+		<table class="ansiref w100">
+			<thead><tr><th>Code</th><th>Meaning</th></tr></thead>
+			<tbody>
+			<tr>
+				<td><code>
+					\e]9;<i>t</i>\a
+				</code></td>
+				<td>
+					Show a notification with text <i>t</i>. This will be either a desktop notification
+					or a pop-up balloon.
+				</td>
+			</tr>
+			<tr>
+				<td><code>
+					\e[?<i>n</i>s<br>\e[?<i>n</i>r
+				</code></td>
+				<td>
+					Save (<code>s</code>) and restore (<code>r</code>) any option set using <code>CSI ? <i>n</i> h</code>.
+					This is used by some applications to back up the original state before
+					making changes.
 				</td>
 			</tr>
 			</tbody>
