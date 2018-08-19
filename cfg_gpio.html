@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, maximum-scale=1">
+	<title>GPIO Control :: ESPTerm</title>
+	<link href="/css/app.9aae724-en.css" rel="stylesheet">
+	<script src="/js/app.9aae724-en.js"></script>
+	<script>
+		var _root = location.host;
+		var _demo = 1;
+			</script>
+</head>
+<body class="cfg">
+<div id="outer">
+<nav id="menu">
+	<div id="brand" tabindex=0>ESPTerm<sup> DEMO</sup></div>
+	<a href="term.html" class="icn-back">Back to Terminal</a>
+	<a href="cfg_term.html" class="icn-terminal ">Terminal Settings</a><a href="cfg_wifi.html" class="icn-wifi ">WiFi Settings</a><a href="cfg_network.html" class="icn-network ">Network Settings</a><a href="cfg_system.html" class="icn-configure ">System Settings</a><a href="cfg_gpio.html" class="icn-gpio selected">GPIO Control</a><a href="help.html" class="icn-help ">Quick Reference</a><a href="about.html" class="icn-about ">About ESPTerm</a></nav>
+
+<div id="content">
+<img src="/img/loader.gif" alt="Loading…" id="loader">
+<h1>GPIO Control</h1>
+
+<div class="Box errors hidden">
+	<span class="lead">Validation errors for:</span>&nbsp;<span class="list"></span>
+</div>
+
+<div class="Box message hidden"></div>
+<div class="Box errmessage hidden"></div>
+
+<form class="Box str mobcol" action="system_set.html" method="GET" id="form-gpio">
+	<input type="hidden" name="redir" value="/cfg/gpio">
+	<h2>Pin Config</h2>
+
+			<div class="Row">
+			<label for="gpio2_conf">GPIO2 function</label>
+			<select name="gpio2_conf" id="gpio2_conf">
+				<option value="0">Debug UART Tx</option>
+				<option value="1">Output (initial 0)</option>
+				<option value="2">Output (initial 1)</option>
+				<option value="3">Input (pull-up)</option>
+				<option value="4">Input (floating)</option>
+			</select>
+		</div>
+			<div class="Row">
+			<label for="gpio4_conf">GPIO4 function</label>
+			<select name="gpio4_conf" id="gpio4_conf">
+				<option value="0">Disabled</option>
+				<option value="1">Output (initial 0)</option>
+				<option value="2">Output (initial 1)</option>
+				<option value="3">Input (pull-up)</option>
+				<option value="4">Input (floating)</option>
+			</select>
+		</div>
+			<div class="Row">
+			<label for="gpio5_conf">GPIO5 function</label>
+			<select name="gpio5_conf" id="gpio5_conf">
+				<option value="0">Disabled</option>
+				<option value="1">Output (initial 0)</option>
+				<option value="2">Output (initial 1)</option>
+				<option value="3">Input (pull-up)</option>
+				<option value="4">Input (floating)</option>
+			</select>
+		</div>
+	
+	<div class="Row buttons">
+		<a class="button icn-ok" href="#" onclick="qs('#form-gpio').submit()">Apply!</a>
+	</div>
+</form>
+
+<div class="Box str">
+	<h2>Pin State</h2>
+
+	<div class="Row explain nomargintop">
+		Click state indicators to toggle output levels. 
+		 See the help page for information about the GPIO access HTTP API.	</div>
+
+			<div class="Row x-iorow-2">
+			<label class="x-in-handle" data-num="2" tabindex="0">
+				GPIO2 level
+				<span class="gpio-indicator x-in2" data-num="2"></span>
+			</label>
+		</div>
+			<div class="Row x-iorow-4">
+			<label class="x-in-handle" data-num="4" tabindex="0">
+				GPIO4 level
+				<span class="gpio-indicator x-in4" data-num="4"></span>
+			</label>
+		</div>
+			<div class="Row x-iorow-5">
+			<label class="x-in-handle" data-num="5" tabindex="0">
+				GPIO5 level
+				<span class="gpio-indicator x-in5" data-num="5"></span>
+			</label>
+		</div>
+	</div>
+
+<script>
+  GPIO_Ctl.init({"io2":0,"io4":0,"io5":1}, 0>2 || 1>2 || 2>2)
+
+  $('#gpio2_conf').val(0);
+  if (0 === 0) $('.x-iorow-2').addClass('hidden');
+
+  $('#gpio4_conf').val(1);
+  if (1 === 0) $('.x-iorow-4').addClass('hidden');
+
+  $('#gpio5_conf').val(2);
+  if (2 === 0) $('.x-iorow-5').addClass('hidden');
+</script>
+
+<div class="botpad"></div>
+
+<div class="NotifyMsg hidden" id="notif"></div>
+
+</div>
+
+</div>
+
+</body>
+</html>
